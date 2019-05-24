@@ -30,8 +30,6 @@ class button():
     Attributes:
         self.colour = colour of the rectangle
         self.hColour = colour of the rectangle when mouse is over it
-        self.x = x position for rectangle to be drawn
-        self.y = y position for rectangle to be drawn
         self.w = width of rectangle
         self.h = height of rectangle
         self.txt = text to be displayed inside of rectangle
@@ -39,11 +37,9 @@ class button():
         self.tColour = colour of text
         self.action = determines what the buttons action is when clicked
     """
-    def __init__ (self,colour,hColour,x,y,w,h,txt,size,tColour,action):
+    def __init__ (self,colour,hColour,w,h,txt,size,tColour,action):
         self.colour = colour
         self.hColour = hColour
-        self.x = x
-        self.y = y
         self.w = w
         self.h = h
         self.txt = txt
@@ -51,13 +47,13 @@ class button():
         self.tColour = tColour
         self.action = action
 
-    def draw(self,screen,playScreen):
+    def draw(self,screen,x,y,playScreen):
         """method that draws a rectangle on the screen, also checking if the mouse is over the rectangle, if it is it will also check for a click."""
         mouse= P.mouse.get_pos() #gets X and Y of mouse position
         click= P.mouse.get_pressed() #gets postion of mouse when clicked
     
-        if self.x+self.w>mouse[0]>self.x and self.y+self.h>mouse[1]>self.y: #asks if the mouse is in the region where the button is located.
-            P.draw.rect(screen,self.hColour,(self.x,self.y,self.w,self.h)) #draws a rectangle with the highlighted colour if mouse is on it
+        if x+self.w>mouse[0]>x and y+self.h>mouse[1]>y: #asks if the mouse is in the region where the button is located.
+            P.draw.rect(screen,self.hColour,(x,y,self.w,self.h)) #draws a rectangle with the highlighted colour if mouse is on it
             if click[0]==1 and self.action!=None: #asks if the button has been clicked when it is within the reigion and if action is doing nothing
                 if self.action=="play": #determines which action to fufil
                     playScreen = "play"
@@ -69,11 +65,50 @@ class button():
                     P.quit()
                     quit()
         else:
-            P.draw.rect(screen,self.colour,(self.x,self.y,self.w,self.h)) #draws a rectangle with the normal colour if mouse isnt on it
+            P.draw.rect(screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if mouse isnt on it
         font = P.font.SysFont('comicsans', self.size)
         text = font.render(self.txt, 1,self.tColour)
-        screen.blit(text, (self.x + (self.w/2 - text.get_width()/2), self.y + (self.h/2 - text.get_height()/2)))
+        screen.blit(text, (x + (self.w/2 - text.get_width()/2), y + (self.h/2 - text.get_height()/2)))
         return playScreen
+    
+class arrowButton(object):
+    """This class will be used to draw buttons and check if they have been clicked.
+
+    This is very similar to the class button however is different as a image will be blit rather than a rectangle in the future
+
+    Attributes:
+        self.colour = colour of the rectangle
+        self.hColour = colour of the rectangle when mouse is over it
+        self.w = width of rectangle
+        self.h = height of rectangle
+        self.action = determines what the buttons action is when clicked
+    """
+
+    def __init__(self,colour,hColour,w,h,action):
+        """Inits arrowButton with varaibles."""
+        self.colour = colour
+        self.hColour = hColour
+        self.w = w
+        self.h = h
+        self.action = action
+
+    def arrowDraw(self,screen,x,y):
+        """method that draws a rectangle on the screen, also checking if the mouse is over the rectangle, if it is it will also check for a click."""
+        mouse= P.mouse.get_pos() #gets X and Y of mouse position
+        click= P.mouse.get_pressed() #gets postion of mouse when clicked
+    
+        if x+self.w>mouse[0]>x and y+self.h>mouse[1]>y: #asks if the mouse is in the region where the button is located.
+            P.draw.rect(screen,self.hColour,(x,y,self.w,self.h)) #draws a rectangle with the highlighted colour if mouse is on it
+            if click[0]==1 and self.action!=None: #asks if the button has been clicked when it is within the reigion and if action is doing nothing
+                if self.action=="left": #determines which action to fufil
+                    print("left button has been clicked")
+                elif self.action =="right":
+                    print("right button has been clicked")
+
+        else:
+            P.draw.rect(screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if mouse isnt on it
+    
+    
 # templates
 def function_name(arg1, arg2, other_silly_variable=None):
     """Does something amazing.
