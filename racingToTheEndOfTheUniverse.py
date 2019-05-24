@@ -27,17 +27,23 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 red = (216, 0, 0)
 lightRed = (255, 0, 0)
-yellow = (255, 255, 0)
+yellow = (234, 226, 0)
+lightYellow = (255,255,0)
 green = (0, 206, 44)
 lightGreen = (0, 249, 54)
 blue = (5, 0, 165)
 lightBlue = (8, 0, 255)
+grey = (92, 98, 112)
 
-#creates objects to be used later on in classes
-playB = button(green,lightGreen,50,500,150,50,"PLAY",34,black,"play")
-quitB = button(red,lightRed,600,500,150,50,"QUIT",34,black,"quit")
-instructionsB = button(blue,lightBlue,300,500,200,50,"INSTRUCTIONS",34,black,"instructions")
-introB = button(red,lightRed,600,500,150,50,"BACK",34,black,"intro")
+#creates objects to be used later on in button class
+playB = button(green,lightGreen,150,50,"PLAY",34,black,"play")
+quitB = button(red,lightRed,150,50,"QUIT",34,black,"quit")
+instructionsB = button(blue,lightBlue,200,50,"INSTRUCTIONS",34,black,"instructions")
+introB = button(red,lightRed,150,50,"BACK",34,black,"intro")
+
+#creates objects to be used later on in arrowButton class
+leftB = arrowButton(yellow,lightYellow,150,50,"left")
+rightB = arrowButton(yellow,lightYellow,150,50,"right")
 
 
 def introscreen(playScreen):
@@ -55,9 +61,9 @@ def introscreen(playScreen):
     """
     screen.fill(white) #fills the screen with a background colour
     #draws the play, quit and instruction button
-    playScreen = playB.draw(screen, playScreen) 
-    playScreen =quitB.draw(screen, playScreen)
-    playScreen =instructionsB.draw(screen, playScreen)
+    playScreen = playB.draw(screen,50,500, playScreen) 
+    playScreen =quitB.draw(screen,600,500, playScreen)
+    playScreen =instructionsB.draw(screen,300,500, playScreen)
     return playScreen
 
 def playGame(playScreen):
@@ -72,8 +78,10 @@ def playGame(playScreen):
     Raises:
         AnError: An error occurred running this function.
     """
-    screen.fill(yellow) #fills the screen with a background colour
-    playScreen = introB.draw(screen,playScreen) #draws the back button which only will be used to go back to the intro screen
+    screen.fill(grey) #fills the screen with a background colour
+    playScreen = introB.draw(screen,600,50,playScreen) #draws the back button which only will be used to go back to the intro screen
+    leftB.arrowDraw(screen,50,500)
+    rightB.arrowDraw(screen,600,500)
 
     return playScreen
 
@@ -90,7 +98,7 @@ def instructionScreen(playScreen):
         AnError: An error occurred running this function.
     """
     screen.fill(black) #fills the screen with a background colour
-    playScreen = introB.draw(screen,playScreen)
+    playScreen = introB.draw(screen,600,500, playScreen)
 
     return playScreen
 
