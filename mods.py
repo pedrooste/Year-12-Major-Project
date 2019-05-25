@@ -71,7 +71,7 @@ class button():
         screen.blit(text, (x + (self.w/2 - text.get_width()/2), y + (self.h/2 - text.get_height()/2)))
         return playScreen
     
-class arrowButton(object):
+class arrowButton():
     """This class will be used to draw buttons and check if they have been clicked.
 
     This is very similar to the class button however is different as a image will be blit rather than a rectangle in the future
@@ -92,23 +92,49 @@ class arrowButton(object):
         self.h = h
         self.action = action
 
-    def arrowDraw(self,screen,x,y):
+    def draw(self,screen,x,y,carX):
         """method that draws a rectangle on the screen, also checking if the mouse is over the rectangle, if it is it will also check for a click."""
         mouse= P.mouse.get_pos() #gets X and Y of mouse position
         click= P.mouse.get_pressed() #gets postion of mouse when clicked
-    
+                
+        print(click)
         if x+self.w>mouse[0]>x and y+self.h>mouse[1]>y: #asks if the mouse is in the region where the button is located.
             P.draw.rect(screen,self.hColour,(x,y,self.w,self.h)) #draws a rectangle with the highlighted colour if mouse is on it
-            if click[0]==1 and self.action!=None: #asks if the button has been clicked when it is within the reigion and if action is doing nothing
-                if self.action=="left": #determines which action to fufil
-                    print("left button has been clicked")
-                elif self.action =="right":
-                    print("right button has been clicked")
+            if click[0] == 1 and self.action!=None: #asks if the button has been clicked when it is within the reigion and if action is doing nothing
+                if self.action =="right": #determines which action to fufil
+                    carX +=5
+                elif self.action =="left":
+                    carX -=5
 
         else:
             P.draw.rect(screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if mouse isnt on it
+           
+        return carX
+
+class player():
+    """Creates a rectangle that is controlled by the player (x movements
+
+    This class will be updated accordingly as more graphics are implemented into the game
     
-    
+    Attributes:
+        likes_spam: A boolean indicating if we like SPAM or not.
+        eggs: An integer count of the eggs we have laid.
+    """
+
+    def __init__(self,colour,hColour,w,h):
+        """Inits Player class with variables"""
+        self.colour = colour
+        self.hColour = hColour
+        self.w = w
+        self.h = h
+
+    def draw(self,screen,x,y,movement):
+        """method that draws the player onto the screen"""
+        if movement == True:
+            P.draw.rect(screen,self.hColour,(x,y,self.w,self.h)) #draws a rectangle with the highlighted colour if it has been moved
+        else:
+            P.draw.rect(screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if not moved
+
 # templates
 def function_name(arg1, arg2, other_silly_variable=None):
     """Does something amazing.
