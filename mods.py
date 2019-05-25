@@ -1,12 +1,12 @@
 """ Racing to the end of the universe!
 A simple car game involving pygame. You control a car on a road in which you have to dodge oncomming cars, this will get harder as the game progresses.
 
-this is where all of the classes will be stored, modules cannot be stored here as they do not have acess to global variables
+this is where all of the classes will be stored, modules can be stored here but global variables have to be passed
 """
 
 __author__ = "Pedro Oste"
 __license__ = "GPL"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __email__ = "Pedro.oste@education.nsw.com.au"
 __status__ = "Alpha"
 
@@ -68,7 +68,7 @@ class button():
                     quit()
         else:
             P.draw.rect(screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if mouse isnt on it
-        font = P.font.SysFont('comicsans', self.size)
+        font = P.font.SysFont('comicsans', self.size) #now we draw the text onto the button (first we have to render)
         text = font.render(self.txt, 1,self.tColour)
         screen.blit(text, (x + (self.w/2 - text.get_width()/2), y + (self.h/2 - text.get_height()/2)))
         return playScreen
@@ -95,16 +95,17 @@ class arrowButton():
         self.action = action
 
     def draw(self,screen,x,y,carX):
-        """method that draws a rectangle on the screen, also checking if the mouse is over the rectangle, if it is it will also check for a click."""
+        """method that draws a rectangle on the screen, also checking if the mouse is over the rectangle, if it is it will also check for a click.
+        - If the button is clicked, the carX variable will be updated (left and right)
+"""
         mouse= P.mouse.get_pos() #gets X and Y of mouse position
         click= P.mouse.get_pressed() #gets postion of mouse when clicked
-                
-
+        
         if x+self.w>mouse[0]>x and y+self.h>mouse[1]>y: #asks if the mouse is in the region where the button is located.
             P.draw.rect(screen,self.hColour,(x,y,self.w,self.h)) #draws a rectangle with the highlighted colour if mouse is on it
-            if click[0] == 1 and self.action!=None: #asks if the button has been clicked when it is within the reigion and if action is doing nothing
+            if click[0]==1 and self.action!=None: #asks if the button has been clicked when it is within the reigion and if action is doing nothing
                 if self.action =="right": #determines which action to fufil
-                    carX +=5
+                    carX +=5 #car x position is updated
                 elif self.action =="left":
                     carX -=5
 
@@ -114,13 +115,15 @@ class arrowButton():
         return carX
 
 class player():
-    """Creates a rectangle that is controlled by the player (x movements
+    """Creates a rectangle that is controlled by the player (x movements) via previous buttons
 
     This class will be updated accordingly as more graphics are implemented into the game
     
     Attributes:
-        likes_spam: A boolean indicating if we like SPAM or not.
-        eggs: An integer count of the eggs we have laid.
+        self.colour = colour of the rectangle
+        self.hColour = colour of the rectangle when mouse is over it
+        self.w = width of rectangle
+        self.h = height of rectangle
     """
 
     def __init__(self,colour,hColour,w,h):
@@ -130,16 +133,16 @@ class player():
         self.w = w
         self.h = h
 
-    def draw(self,screen,x,y,movement):
+    def draw(self,screen,x,movement):
         """method that draws the player onto the screen"""
         if movement == True:
-            P.draw.rect(screen,self.hColour,(x,y,self.w,self.h)) #draws a rectangle with the highlighted colour if it has been moved
+            P.draw.rect(screen,self.hColour,(x,490,self.w,self.h)) #draws a rectangle with the highlighted colour if it has been moved
         else:
-            P.draw.rect(screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if not moved
+            P.draw.rect(screen,self.colour,(x,490,self.w,self.h)) #draws a rectangle with the normal colour if not moved
 
 def rTxt(screen,msg,x,y,size,colour):
     """Renders and blits text
-    This module will be used whenever you would like to render text into the pygame window
+    This module will be used whenever you would like to render text into the pygame window .This is not a class as text wouldnt be treated as an object.
     Args:
         msg: text to be displayed
         x: x value the button will be placed
@@ -151,13 +154,59 @@ def rTxt(screen,msg,x,y,size,colour):
     Returns:
         description of the stuff that is returned by the function.
     Raises:
-        AnError: An error occurred running this function.
+
     """
     
     font = P.font.SysFont("comic sans",size) #creates a font for the render function to use
     text = font.render(msg,True,colour) #creates a text for the blit function to use
     x,y = ((x- (text.get_rect().w/2)),(y- (text.get_rect().h/2))) #centres the text depening on the length and height of the text
     screen.blit(text,(x,y))
+
+class Ecar():
+    """creates objects for the variety of enemy cars
+
+    each enemy car will have diffrent speeds and lenghts (to be implemented) ....
+
+    Attributes:
+        self.colour = colour of the rectangle
+        self.hColour = colour of the rectangle when mouse is over it
+        self.w = width of rectangle
+        self.h = height of rectangle'
+        self.y = starting y postion of the car (this is started at -10 so that it does not instantly appear on start of the game)
+        self.x = x postion of the car which will be random between the road boundry
+    """
+
+    def __init__(self,colour,speed,w,h):
+        """Inits SampleClass with blah."""
+        self.colour = colour
+        self.speed = speed
+        self.w = w
+        self.h = h
+        self.y = -5
+        self.x = R.randrange(100,(700-25))
+
+    def draw(self,screen):
+        """Draws the moving enemy car object"""
+        P.draw.rect(screen,self.colour,(self.x,self.y,self.w,self.h)) #draws a rectangle with a colour
+        if self.y > 800: #checks if the object is passed, to which it will reset to be shown again
+            self.reset()
+        else:
+            self.y = self.y + self.speed #creates a moving image as the loop is fulfilled
+        
+    def checkHit(self,carX):
+        """checks if the player car hits the enemy car"""
+        crash = False #sets crash to false
+        if self.y > 490 -25 and self.y <490 +25: #sets crash to true if in the players car area
+            if self.x > carX -25 and self.x < carX+25: #minus/plus 25 as this is the area (hitbox) of the rectangle
+                crash = True
+        return crash
+    
+    
+    def reset(self): #reset function to be called, resest x and y.
+        self.y = 0
+        self.x = R.randrange(100,(700-25))
+
+
 
 # templates
 def function_name(arg1, arg2, other_silly_variable=None):
