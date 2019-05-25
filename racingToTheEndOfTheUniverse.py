@@ -40,6 +40,7 @@ playB = button(green,lightGreen,150,50,"PLAY",34,black,"play")
 quitB = button(red,lightRed,150,50,"QUIT",34,black,"quit")
 instructionsB = button(blue,lightBlue,200,50,"INSTRUCTIONS",34,black,"instructions")
 introB = button(red,lightRed,150,50,"BACK",34,black,"intro")
+mainMenuB = button(red,lightRed,200,50,"MAIN MENU",34,black,'mainMenu')
 
 #creates objects to be used later on in arrowButton class
 leftB = arrowButton(yellow,lightYellow,100,50,"left")
@@ -87,6 +88,10 @@ def playGame(playScreen,carX):
         AnError: An error occurred running this function.
     """
     screen.fill(grey) #fills the screen with a background colour , has to be placed first
+    #while these lines are inconvient now, a class will be made to draw and update the background once graphics are introduced
+    P.draw.line(screen,white,[100,0],[100,600],5)
+    P.draw.line(screen,white,[700,0],[700,600],5)
+    
     oldCarX = carX #creates a temporary variable which will be checked later on to see if the x postion has been changed
     
     playScreen = introB.draw(screen,600,50,playScreen) #draws the back button which only will be used to go back to the intro screen
@@ -99,6 +104,9 @@ def playGame(playScreen,carX):
         movement = True
         
     mcar.draw(screen,carX,500,movement) #draws the rectangle car
+    
+    if carX>600+50 or carX<100: #creates a boundry that the car must stay in, however these numbers will be changed when graphics are implemented (based off drawn lines)
+        playScreen = "crash"
 
     return playScreen, carX #need to return the playScreen so we know what screen we are on and the carX so we know were to start from when the loop is redone.
 
@@ -120,7 +128,24 @@ def instructionScreen(playScreen):
 
     return playScreen
 
+def crashScreen(playScreen,carX):
+    """Displays the crash screen when a boundry is met
+    this will reference to other classes and modules to display a screen
 
+    Args:
+        
+    Returns:
+        
+    Raises:
+        
+    """
+    P.draw.rect(screen,white,(100,50,600,500))
+    rTxt(screen,"You crashed",400,100,48,black)
+    playScreen = mainMenuB.draw(screen,300,450,playScreen)
+    if playScreen == "intro":
+        carX = 375
+    
+    return playScreen,carX
 
 # game loop - runs loopRate times a second!
 while play:  # game loop - note:  everything in this loop is indented one tab
@@ -135,6 +160,8 @@ while play:  # game loop - note:  everything in this loop is indented one tab
             playScreen,carX = playGame(playScreen,carX) #displays the play screen
         elif playScreen == "instructions":
             playScreen = instructionScreen(playScreen) #displays the instructions screen
+        elif playScreen == "crash":
+            playScreen,carX = crashScreen(playScreen,carX)
             
         else:
             playScreen = "intro"
