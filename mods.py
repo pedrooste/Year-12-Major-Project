@@ -135,6 +135,28 @@ class player():
         else:
             P.draw.rect(screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if not moved
 
+def rTxt(screen,msg,x,y,size,colour):
+    """Renders and blits text
+    This module will be used whenever you would like to render text into the pygame window
+    Args:
+        msg: text to be displayed
+        x: x value the button will be placed
+        y: y value the button will be placed
+        l: length of the button
+        h: height of the button
+        size: size of text
+        colour: colour of text
+    Returns:
+        description of the stuff that is returned by the function.
+    Raises:
+        AnError: An error occurred running this function.
+    """
+    
+    font = P.font.SysFont("comic sans",size) #creates a font for the render function to use
+    text = font.render(msg,True,colour) #creates a text for the blit function to use
+    x,y = ((x- (text.get_rect().w/2)),(y- (text.get_rect().h/2))) #centres the text depening on the length and height of the text
+    screen.blit(text,(x,y))
+
 # templates
 def function_name(arg1, arg2, other_silly_variable=None):
     """Does something amazing.
