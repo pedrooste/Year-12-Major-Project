@@ -67,7 +67,7 @@ def introscreen(playScreen):
         AnError: An error occurred running this function.
     """
     screen.fill(white) #fills the screen with a background colour
-    rTxt("Racing to the end of the universe",400,50,48,black)
+    rTxt(screen,"Racing to the end of the universe",400,50,48,black)
     #draws the play, quit and instruction button
     playScreen = playB.draw(screen,50,500, playScreen) 
     playScreen =quitB.draw(screen,600,500, playScreen)
@@ -115,32 +115,12 @@ def instructionScreen(playScreen):
         AnError: An error occurred running this function.
     """
     screen.fill(black) #fills the screen with a background colour
-    rTxt("Instructions",400,50,48,white)
+    rTxt(screen,"Instructions",400,50,48,white)
     playScreen = introB.draw(screen,600,500, playScreen) #draws the back button for the intro screen
 
     return playScreen
 
-def rTxt(msg,x,y,size,colour):
-    """Renders and blits text
-    This module will be used whenever you would like to render text into the pygame window
-    Args:
-        msg: text to be displayed
-        x: x value the button will be placed
-        y: y value the button will be placed
-        l: length of the button
-        h: height of the button
-        size: size of text
-        colour: colour of text
-    Returns:
-        description of the stuff that is returned by the function.
-    Raises:
-        AnError: An error occurred running this function.
-    """
-    
-    font = P.font.SysFont("comic sans",size) #creates a font for the render function to use
-    text = font.render(msg,True,colour) #creates a text for the blit function to use
-    x,y = ((x- (text.get_rect().w/2)),(y- (text.get_rect().h/2))) #centres the text depening on the length and height of the text
-    screen.blit(text,(x,y))
+
 
 # game loop - runs loopRate times a second!
 while play:  # game loop - note:  everything in this loop is indented one tab
