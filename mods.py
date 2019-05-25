@@ -61,6 +61,8 @@ class button():
                     playScreen = "instructions"
                 elif self.action =="intro":
                     playScreen = "intro"
+                elif self.action =="mainMenu":
+                    playScreen = "intro"
                 elif self.action =="quit":
                     P.quit()
                     quit()
@@ -97,7 +99,7 @@ class arrowButton():
         mouse= P.mouse.get_pos() #gets X and Y of mouse position
         click= P.mouse.get_pressed() #gets postion of mouse when clicked
                 
-        print(click)
+
         if x+self.w>mouse[0]>x and y+self.h>mouse[1]>y: #asks if the mouse is in the region where the button is located.
             P.draw.rect(screen,self.hColour,(x,y,self.w,self.h)) #draws a rectangle with the highlighted colour if mouse is on it
             if click[0] == 1 and self.action!=None: #asks if the button has been clicked when it is within the reigion and if action is doing nothing
