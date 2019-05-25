@@ -4,13 +4,14 @@ A simple car game involving pygame. You control a car on a road in which you hav
 
 __author__ = "Pedro Oste"
 __license__ = "GPL"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __email__ = "Pedro.oste@education.nsw.com.au"
 __status__ = "Alpha"
 
 #dependencies
 import pygame as P # accesses pygame files
 import sys  # to communicate with windows
+import random as R #import the random function
 from mods import *
 
 
@@ -22,7 +23,7 @@ SCREENSIZE = SCREENWIDTH, SCREENHEIGHT = 800, 600  # sets size of screen/window
 screen = P.display.set_mode(SCREENSIZE)  # creates window and game screen
 P.display.set_caption("Racing to the end of the universe!") #sets the game window caption
 
-# set variables for some colours if you wnat them RGB (0-255)
+# set variables for some colours if you want them RGB (0-255)
 white = (255, 255, 255)
 black = (0, 0, 0)
 red = (216, 0, 0)
@@ -49,9 +50,12 @@ rightB = arrowButton(yellow,lightYellow,100,50,"right")
 #creates objects to be used later in player class
 mcar = player(red,green,50,50) #main player car
 
+#creates the enemy cars to be used later on
+Ecar1 = Ecar(white,5,25,25)
+
 #creates initial variables that will be used
 carX = 375 #x cordinate for car
-play = True
+play = True #controls main loop
 playScreen = "intro" #intialises what screen to start on
 
 def introscreen(playScreen):
@@ -65,7 +69,7 @@ def introscreen(playScreen):
         playScreen: determines which screen to be displayed
 
     Raises:
-        AnError: An error occurred running this function.
+
     """
     screen.fill(white) #fills the screen with a background colour
     rTxt(screen,"Racing to the end of the universe",400,50,48,black)
@@ -81,11 +85,13 @@ def playGame(playScreen,carX):
 
     Args:
         playScreen: determines which screen to be displayed
+        carX: current postion of the x coordinate of the car
     Returns:
         playScreen: determines which screen to be displayed
+        carX: current postion of the x coordinate of the car (to be referenced to when the game loop restarts
 
     Raises:
-        AnError: An error occurred running this function.
+
     """
     screen.fill(grey) #fills the screen with a background colour , has to be placed first
     #while these lines are inconvient now, a class will be made to draw and update the background once graphics are introduced
@@ -93,8 +99,7 @@ def playGame(playScreen,carX):
     P.draw.line(screen,white,[700,0],[700,600],5)
     
     oldCarX = carX #creates a temporary variable which will be checked later on to see if the x postion has been changed
-    
-    playScreen = introB.draw(screen,600,50,playScreen) #draws the back button which only will be used to go back to the intro screen
+    #draws left and right buttons
     carX = leftB.draw(screen,50,500,carX)
     carX = rightB.draw(screen,650,500,carX)
     
@@ -102,9 +107,18 @@ def playGame(playScreen,carX):
         movement = False
     else:
         movement = True
-        
-    mcar.draw(screen,carX,500,movement) #draws the rectangle car
     
+    Ecar1.draw(screen) #draws the enemy car    
+    mcar.draw(screen,carX,movement) #draws the main player rectangle car
+
+
+
+    
+    playScreen = introB.draw(screen,600,50,playScreen) #draws the back button which only will be used to go back to the intro screen
+    
+    crash = Ecar1.checkHit(carX) #checks if the car hits the enemy car
+    if crash == True:
+        playScreen = "crash" #sends to crash screen
     if carX>600+50 or carX<100: #creates a boundry that the car must stay in, however these numbers will be changed when graphics are implemented (based off drawn lines)
         playScreen = "crash"
 
@@ -120,7 +134,7 @@ def instructionScreen(playScreen):
         playScreen: determines which screen to be displayed
 
     Raises:
-        AnError: An error occurred running this function.
+
     """
     screen.fill(black) #fills the screen with a background colour
     rTxt(screen,"Instructions",400,50,48,white)
@@ -133,47 +147,46 @@ def crashScreen(playScreen,carX):
     this will reference to other classes and modules to display a screen
 
     Args:
-        
+        playScreen: determines which screen to be displayed
+        carX: determines position of car (this is sent so it can be reset if intro button is clicked)
     Returns:
-        
+        playScreen: determines which screen to be displayed
+        carX: determines position of car (reset version)
     Raises:
         
     """
-    P.draw.rect(screen,white,(100,50,600,500))
-    rTxt(screen,"You crashed",400,100,48,black)
-    playScreen = mainMenuB.draw(screen,300,450,playScreen)
-    if playScreen == "intro":
-        carX = 375
+
+    P.draw.rect(screen,white,(100,50,600,500)) #draws background screen
+    rTxt(screen,"You crashed",400,100,48,black) #displays text saying you crashed
+    playScreen = mainMenuB.draw(screen,300,450,playScreen) #draws a main menu button
+    if playScreen == "intro": #if the palyer wants to go to the main menu, positions must be reset
+        carX = 375 #car reset positon
+        Ecar1.reset() #calls class method to reset the value of the coordinates for each object
     
-    return playScreen,carX
+    return playScreen,carX 
 
 # game loop - runs loopRate times a second!
 while play:  # game loop - note:  everything in this loop is indented one tab
 
+            
+    if playScreen == "intro": #this checks what screen to display by using a variable called playScreen
+        playScreen = introscreen(playScreen) #displays the intro screen
+    elif playScreen == "play":
+        playScreen,carX = playGame(playScreen,carX) #displays the play screen
+    elif playScreen == "instructions":
+        playScreen = instructionScreen(playScreen) #displays the instructions screen
+    elif playScreen == "crash":
+        playScreen,carX = crashScreen(playScreen,carX)
+            
+    else:
+        playScreen = "intro"
+        print("there has been an error with playScreen, reverted to intro")
+        
     for event in P.event.get():  # get user interaction events
         if event.type == P.QUIT:  # tests if window's X (close) has been clicked
             play = False  # causes exit of game loop
+
         
-        if playScreen == "intro": #this checks what screen to display by using a variable called playScreen
-            playScreen = introscreen(playScreen) #displays the intro screen
-        elif playScreen == "play":
-            playScreen,carX = playGame(playScreen,carX) #displays the play screen
-        elif playScreen == "instructions":
-            playScreen = instructionScreen(playScreen) #displays the instructions screen
-        elif playScreen == "crash":
-            playScreen,carX = crashScreen(playScreen,carX)
-            
-        else:
-            playScreen = "intro"
-            print("there has been an error with playScreen, reverted to intro")
-
-        if event.type == P.MOUSEBUTTONDOWN: #includes touching screen
-            # change this to do something if user clicks mouse
-            # or touches screen
-            pass 
-        
-
-
     # your code ends here #
     P.display.flip()  # makes any changes visible on the screen
     clock.tick(loopRate)  # limits game to frame per second, FPS value
