@@ -42,9 +42,16 @@ instructionsB = button(blue,lightBlue,200,50,"INSTRUCTIONS",34,black,"instructio
 introB = button(red,lightRed,150,50,"BACK",34,black,"intro")
 
 #creates objects to be used later on in arrowButton class
-leftB = arrowButton(yellow,lightYellow,150,50,"left")
-rightB = arrowButton(yellow,lightYellow,150,50,"right")
+leftB = arrowButton(yellow,lightYellow,100,50,"left")
+rightB = arrowButton(yellow,lightYellow,100,50,"right")
 
+#creates objects to be used later in player class
+mcar = player(red,green,50,50) #main player car
+
+#creates initial variables that will be used
+carX = 375 #x cordinate for car
+play = True
+playScreen = "intro" #intialises what screen to start on
 
 def introscreen(playScreen):
     """Displays the intro screen
@@ -60,13 +67,14 @@ def introscreen(playScreen):
         AnError: An error occurred running this function.
     """
     screen.fill(white) #fills the screen with a background colour
+    rTxt("Racing to the end of the universe",400,50,48,black)
     #draws the play, quit and instruction button
     playScreen = playB.draw(screen,50,500, playScreen) 
     playScreen =quitB.draw(screen,600,500, playScreen)
     playScreen =instructionsB.draw(screen,300,500, playScreen)
     return playScreen
 
-def playGame(playScreen):
+def playGame(playScreen,carX):
     """Displays the game screen
     this will then reference to other classes
 
@@ -78,12 +86,21 @@ def playGame(playScreen):
     Raises:
         AnError: An error occurred running this function.
     """
-    screen.fill(grey) #fills the screen with a background colour
+    screen.fill(grey) #fills the screen with a background colour , has to be placed first
+    oldCarX = carX #creates a temporary variable which will be checked later on to see if the x postion has been changed
+    
     playScreen = introB.draw(screen,600,50,playScreen) #draws the back button which only will be used to go back to the intro screen
-    leftB.arrowDraw(screen,50,500)
-    rightB.arrowDraw(screen,600,500)
+    carX = leftB.draw(screen,50,500,carX)
+    carX = rightB.draw(screen,650,500,carX)
+    
+    if oldCarX == carX: #if the x postion has been changed then movement will be true. If movement is true then the rectangle will be draw a different colour
+        movement = False
+    else:
+        movement = True
+        
+    mcar.draw(screen,carX,500,movement) #draws the rectangle car
 
-    return playScreen
+    return playScreen, carX #need to return the playScreen so we know what screen we are on and the carX so we know were to start from when the loop is redone.
 
 def instructionScreen(playScreen):
     """Displays the instructions screen
@@ -98,12 +115,33 @@ def instructionScreen(playScreen):
         AnError: An error occurred running this function.
     """
     screen.fill(black) #fills the screen with a background colour
-    playScreen = introB.draw(screen,600,500, playScreen)
+    rTxt("Instructions",400,50,48,white)
+    playScreen = introB.draw(screen,600,500, playScreen) #draws the back button for the intro screen
 
     return playScreen
 
-play = True
-playScreen = "intro" #intialises what screen to start on
+def rTxt(msg,x,y,size,colour):
+    """Renders and blits text
+    This module will be used whenever you would like to render text into the pygame window
+    Args:
+        msg: text to be displayed
+        x: x value the button will be placed
+        y: y value the button will be placed
+        l: length of the button
+        h: height of the button
+        size: size of text
+        colour: colour of text
+    Returns:
+        description of the stuff that is returned by the function.
+    Raises:
+        AnError: An error occurred running this function.
+    """
+    
+    font = P.font.SysFont("comic sans",size) #creates a font for the render function to use
+    text = font.render(msg,True,colour) #creates a text for the blit function to use
+    x,y = ((x- (text.get_rect().w/2)),(y- (text.get_rect().h/2))) #centres the text depening on the length and height of the text
+    screen.blit(text,(x,y))
+
 # game loop - runs loopRate times a second!
 while play:  # game loop - note:  everything in this loop is indented one tab
 
@@ -114,7 +152,7 @@ while play:  # game loop - note:  everything in this loop is indented one tab
         if playScreen == "intro": #this checks what screen to display by using a variable called playScreen
             playScreen = introscreen(playScreen) #displays the intro screen
         elif playScreen == "play":
-            playScreen = playGame(playScreen) #displays the play screen
+            playScreen,carX = playGame(playScreen,carX) #displays the play screen
         elif playScreen == "instructions":
             playScreen = instructionScreen(playScreen) #displays the instructions screen
             
