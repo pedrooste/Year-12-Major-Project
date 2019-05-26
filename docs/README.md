@@ -2,10 +2,9 @@
 
 Use this folder to store all your documents that are not in the wiki
 
-As you add documents edit this README.md file so that it lists and describes the documents you have stored here.
 
-* document 1
-  * description
+* Design breif
+  * The deisgn breif contains key information about the programme including: raw notes, key objectives, ethical/social/legal issues, proposed game, sprint outlines (to be updated as gone through)
   
-* document 2
-  * descriptipon
+* Storyboards
+  * Contains a link to storyboards used to design the game
