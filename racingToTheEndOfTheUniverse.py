@@ -57,6 +57,7 @@ Ecar1 = Ecar(white,5,25,25)
 carX = 375 #x cordinate for car
 play = True #controls main loop
 playScreen = "intro" #intialises what screen to start on
+score = 0 #initialises score because theres no headstarts here
 
 def introscreen(playScreen):
     """Displays the intro screen
@@ -79,7 +80,7 @@ def introscreen(playScreen):
     playScreen =instructionsB.draw(screen,300,500, playScreen)
     return playScreen
 
-def playGame(playScreen,carX):
+def playGame(playScreen,carX,score):
     """Displays the game screen
     this will then reference to other classes
 
@@ -108,12 +109,13 @@ def playGame(playScreen,carX):
     else:
         movement = True
     
-    Ecar1.draw(screen) #draws the enemy car    
+    score = Ecar1.draw(screen,score) #draws the enemy car    
     mcar.draw(screen,carX,movement) #draws the main player rectangle car
-
-
-
     
+
+
+
+    rTxt(screen,("Score: "+str(score)),100,50,48,black)    
     playScreen = introB.draw(screen,600,50,playScreen) #draws the back button which only will be used to go back to the intro screen
     
     crash = Ecar1.checkHit(carX) #checks if the car hits the enemy car
@@ -122,7 +124,8 @@ def playGame(playScreen,carX):
     if carX>600+50 or carX<100: #creates a boundry that the car must stay in, however these numbers will be changed when graphics are implemented (based off drawn lines)
         playScreen = "crash"
 
-    return playScreen, carX #need to return the playScreen so we know what screen we are on and the carX so we know were to start from when the loop is redone.
+    return playScreen, carX, score#need to return the playScreen so we know what screen we are on and the carX so we know were to start from when the loop is redone.
+                                  # also need to pass score to keep track of the score
 
 def instructionScreen(playScreen):
     """Displays the instructions screen
@@ -142,7 +145,7 @@ def instructionScreen(playScreen):
 
     return playScreen
 
-def crashScreen(playScreen,carX):
+def crashScreen(playScreen,carX,score):
     """Displays the crash screen when a boundry is met
     this will reference to other classes and modules to display a screen
 
@@ -157,13 +160,16 @@ def crashScreen(playScreen,carX):
     """
 
     P.draw.rect(screen,white,(100,50,600,500)) #draws background screen
-    rTxt(screen,"You crashed",400,100,48,black) #displays text saying you crashed
+    rTxt(screen,"You crashed!",400,100,48,black) #displays text saying you crashed
+    rTxt(screen,("Score: "+str(score)),400,200,48,black) #displays your score
     playScreen = mainMenuB.draw(screen,300,450,playScreen) #draws a main menu button
+
     if playScreen == "intro": #if the palyer wants to go to the main menu, positions must be reset
         carX = 375 #car reset positon
+        score = 0 # resets the score
         Ecar1.reset() #calls class method to reset the value of the coordinates for each object
     
-    return playScreen,carX 
+    return playScreen,carX, score
 
 # game loop - runs loopRate times a second!
 while play:  # game loop - note:  everything in this loop is indented one tab
@@ -172,11 +178,11 @@ while play:  # game loop - note:  everything in this loop is indented one tab
     if playScreen == "intro": #this checks what screen to display by using a variable called playScreen
         playScreen = introscreen(playScreen) #displays the intro screen
     elif playScreen == "play":
-        playScreen,carX = playGame(playScreen,carX) #displays the play screen
+        playScreen,carX,score = playGame(playScreen,carX,score) #displays the play screen
     elif playScreen == "instructions":
         playScreen = instructionScreen(playScreen) #displays the instructions screen
     elif playScreen == "crash":
-        playScreen,carX = crashScreen(playScreen,carX)
+        playScreen,carX,score = crashScreen(playScreen,carX,score)
             
     else:
         playScreen = "intro"
