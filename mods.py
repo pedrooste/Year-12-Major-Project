@@ -185,19 +185,24 @@ class Ecar():
         self.y = -5
         self.x = R.randrange(100,(700-25))
 
-    def draw(self,screen):
+
+    def draw(self,screen,score):
         """Draws the moving enemy car object"""
         P.draw.rect(screen,self.colour,(self.x,self.y,self.w,self.h)) #draws a rectangle with a colour
         if self.y > 800: #checks if the object is passed, to which it will reset to be shown again
             self.reset()
+            score = score + 1
+            print("The score is " + str(score))
         else:
             self.y = self.y + self.speed #creates a moving image as the loop is fulfilled
+
+        return score
         
     def checkHit(self,carX):
         """checks if the player car hits the enemy car"""
         crash = False #sets crash to false
-        if self.y > 490 -25 and self.y <490 +25: #sets crash to true if in the players car area
-            if self.x > carX -25 and self.x < carX+25: #minus/plus 25 as this is the area (hitbox) of the rectangle
+        if self.y + self.h > 490 and self.y < 490 +50: #sets crash to true if in the players car area
+            if self.x + self.w > carX and self.x < carX +50: #minus/plus width and height as this is the area (hitbox) of the rectangle
                 crash = True
         return crash
     
