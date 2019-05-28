@@ -50,8 +50,26 @@ rightB = arrowButton(yellow,lightYellow,100,50,"right")
 #creates objects to be used later in player class
 mcar = player(red,green,50,50) #main player car
 
+
 #creates the enemy cars to be used later on
-Ecar1 = Ecar(white,5,25,25)
+Ecar0 = Ecar(white,5,50,50)
+Ecar1 = Ecar(black,5,50,100)
+Ecar2 = Ecar(white,5,50,50)
+Ecar3 = Ecar(white,5,50,50)
+Ecar4 = Ecar(white,5,50,50)
+Ecar5 = Ecar(white,5,50,50)
+Ecar6 = Ecar(white,5,50,50)
+
+#creating a dictionary that referes to each of the enemy car obkects, this is to make it easier to call them later
+enemyCarDict = {
+    0 : Ecar0,
+    1 : Ecar1,
+    2 : Ecar2,
+    3 : Ecar3,
+    4 : Ecar4,
+    5 : Ecar5,
+    6 : Ecar6,
+    }
 
 #creates initial variables that will be used
 carX = 375 #x cordinate for car
@@ -109,7 +127,12 @@ def playGame(playScreen,carX,score):
     else:
         movement = True
     
-    score = Ecar1.draw(screen,score) #draws the enemy car    
+    difficulty = checkScore(score) #checks the difficulty in order to determine how many cars to deply
+    
+    for i in range (0,difficulty): #deploys cars according to how hard the difficutly is
+        score = enemyCarDict[i].draw(screen,score)
+        
+    
     mcar.draw(screen,carX,movement) #draws the main player rectangle car
     
 
@@ -118,7 +141,9 @@ def playGame(playScreen,carX,score):
     rTxt(screen,("Score: "+str(score)),100,50,48,black)    
     playScreen = introB.draw(screen,600,50,playScreen) #draws the back button which only will be used to go back to the intro screen
     
-    crash = Ecar1.checkHit(carX) #checks if the car hits the enemy car
+    for i in range (0,difficulty): #checks all the cars that are depolyed
+        crash = enemyCarDict[i].checkHit(carX) #checks if the car hits the enemy car
+        
     if crash == True:
         playScreen = "crash" #sends to crash screen
     if carX>600+50 or carX<100: #creates a boundry that the car must stay in, however these numbers will be changed when graphics are implemented (based off drawn lines)
@@ -167,7 +192,9 @@ def crashScreen(playScreen,carX,score):
     if playScreen == "intro": #if the palyer wants to go to the main menu, positions must be reset
         carX = 375 #car reset positon
         score = 0 # resets the score
-        Ecar1.reset() #calls class method to reset the value of the coordinates for each object
+        for i in range (0,6): #becasue difficulty is not passed we will reset all of the cars, this is okay because it is done rarely 
+            enemyCarDict[i].reset() #calls class method to reset the value of the coordinates for each object
+
     
     return playScreen,carX, score
 
