@@ -176,15 +176,14 @@ class Ecar():
         self.x = x postion of the car which will be random between the road boundry
     """
 
-    def __init__(self,colour,speed,w,h):
+    def __init__(self,colour,speed,y,w,h):
         """Inits SampleClass with blah."""
         self.colour = colour
         self.speed = speed
         self.w = w
         self.h = h
-        self.y = -5
+        self.y = y
         self.x = R.randrange(100,(700-w)) #minus width as the area of the car could exceed the boundry
-
 
     def draw(self,screen,score):
         """Draws the moving enemy car object"""
@@ -238,7 +237,7 @@ def checkScore(score):
         difficulty = 4
     elif score >= 12 and score < 19:
         difficulty = 5
-    else:
+    elif score > 19:
         difficulty = 6
         
     return difficulty
