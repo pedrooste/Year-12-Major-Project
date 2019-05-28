@@ -52,13 +52,13 @@ mcar = player(red,green,50,50) #main player car
 
 
 #creates the enemy cars to be used later on
-Ecar0 = Ecar(white,5,50,50)
-Ecar1 = Ecar(black,5,50,100)
-Ecar2 = Ecar(white,5,50,50)
-Ecar3 = Ecar(white,5,50,50)
-Ecar4 = Ecar(white,5,50,50)
-Ecar5 = Ecar(white,5,50,50)
-Ecar6 = Ecar(white,5,50,50)
+Ecar0 = Ecar(white,5,0,50,50)
+Ecar1 = Ecar(black,5,-120,50,100)
+Ecar2 = Ecar(lightBlue,5,-200,50,50)
+Ecar3 = Ecar(blue,5,-270,50,50)
+Ecar4 = Ecar(yellow,5,-340,50,50)
+Ecar5 = Ecar(lightRed,5,-400,50,50)
+Ecar6 = Ecar(red,5,-460,50,50)
 
 #creating a dictionary that referes to each of the enemy car obkects, this is to make it easier to call them later
 enemyCarDict = {
@@ -142,10 +142,11 @@ def playGame(playScreen,carX,score):
     playScreen = introB.draw(screen,600,50,playScreen) #draws the back button which only will be used to go back to the intro screen
     
     for i in range (0,difficulty): #checks all the cars that are depolyed
-        crash = enemyCarDict[i].checkHit(carX) #checks if the car hits the enemy car
+            crash = enemyCarDict[i].checkHit(carX) #checks if the car hits the enemy car
+            if crash == True:
+                playScreen = "crash" #sends to crash screen
         
-    if crash == True:
-        playScreen = "crash" #sends to crash screen
+    
     if carX>600+50 or carX<100: #creates a boundry that the car must stay in, however these numbers will be changed when graphics are implemented (based off drawn lines)
         playScreen = "crash"
 
