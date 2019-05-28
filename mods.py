@@ -183,7 +183,7 @@ class Ecar():
         self.w = w
         self.h = h
         self.y = -5
-        self.x = R.randrange(100,(700-25))
+        self.x = R.randrange(100,(700-w)) #minus width as the area of the car could exceed the boundry
 
 
     def draw(self,screen,score):
@@ -191,8 +191,8 @@ class Ecar():
         P.draw.rect(screen,self.colour,(self.x,self.y,self.w,self.h)) #draws a rectangle with a colour
         if self.y > 800: #checks if the object is passed, to which it will reset to be shown again
             self.reset()
-            score = score + 1
-            print("The score is " + str(score))
+            score = score + 1 #increments score each time a car is passed (or in this case reset)
+            print("The score is " + str(score)) #debugging statement
         else:
             self.y = self.y + self.speed #creates a moving image as the loop is fulfilled
 
@@ -209,8 +209,40 @@ class Ecar():
     
     def reset(self): #reset function to be called, resest x and y.
         self.y = 0
-        self.x = R.randrange(100,(700-25))
+        self.x = R.randrange(100,(700-self.w))
 
+def checkScore(score):
+    """Checks the score in order to determine how hard to place the cars
+
+    This is done by checking each time the score reaches 5, each multiple of five a new harder car is realeased
+
+    Args:
+        score: checks the score in order to determine how hard the game is
+
+
+    Returns:
+        Difficulty: Difficulty whic hdetermines how hard the game is
+
+    Raises:
+
+    """
+    remainder = score % 5 #finds the remainder
+    score = (score - remainder)/5 #minus the score to a multiple of 5, then divides to find difficulty
+    if score == 0: #sets difficulty per score
+        difficulty = 1
+    elif score >= 1 and score < 4: #difficulty varies on score becasue as more cars are added the score increments faster
+        difficulty = 2
+    elif score >= 4 and score < 7:
+        difficulty = 3
+    elif score >= 7 and score < 12:
+        difficulty = 4
+    elif score >= 12 and score < 19:
+        difficulty = 5
+    else:
+        difficulty = 6
+        
+    return difficulty
+    
 
 
 # templates
