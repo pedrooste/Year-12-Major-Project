@@ -1,6 +1,7 @@
 import pygame as P # accesses pygame files
 import sys  # to communicate with windows
 import datetime as d
+import os
 
 
 
@@ -42,23 +43,26 @@ class highscore():
                     highscoreList.append(list) #creates a list of highscores
                     
             highscoreList.sort(key= lambda x: x[1], reverse = True) #sorts the list, reverse order as it naturally sorts low to high
-            print(highscoreList) #debugging statement
+
             self.list = highscoreList #this then creates a list
         
         except:
             print('there is no file specified') #debugging statement
 
-    def checkdate(self,date):
+    def checkdate(self):
         ''' checks the date to determine whether the file contains highscore from the current day '''
         try:
+            
             with open('media/'+self.HST+'.txt', 'r') as file: #trys to open the file
-                list = line.split('\t') #spilts the original file line into a list of three
-                dateCheck = (list3[0:((len(list[2]))-1)]) #gets the date to check ,do not need to check them all as they all are the same
-                
-            if date == dateCheck:
-                today = True #creates an easy to use boolean
-            else:
-                today = False
+                list = file.read() #reads the file
+                list = list.split('\t') #spilts the original file line into a list of three
+                dateCheck = list[3] #gets the date to check ,do not need to check them all as they all are the same
+                dateCheck = dateCheck[0:((len(list[2]))-1)]
+                    
+                if d.date.today == dateCheck:
+                    today = True #creates an easy to use boolean
+                else:
+                    today = False
         except:
             today = True
         
@@ -68,11 +72,18 @@ class highscore():
         '''Appends data to both of the highscore files, as well as checking if the today highscores are the correct date'''
         
         name  = input('What is your name') #temp test
+        inappropriate = self.checkName(name)
+        while inappropriate == True:
+            print('Inappropriate name')
+            name = input('What is your name') #temp test
+            inappropriate = self.checkName(name)
+            
         score = input('what is your score') #temp test
         date = str(d.date.today()) #creates todays date
+
         with open('media/'+self.HS+'.txt','a') as file: #Will create a new file if there is not one there, use append to not overwrite data
             file.write(name+'\t'+score+'\t'+ date +'\n') #writes to the file
-        today = self.checkdate(date)
+        today = self.checkdate()
         
         if today == False: 
             os.remove('media/'+self.HST+'.txt') #removes the file if the dates are not current (whipes all highscores)
@@ -89,17 +100,33 @@ class highscore():
             print('congratulations',self.list[0][0],'you scored',self.list[0][1]) #prints highest score
         except:
             print('there is no data to print highscores') #if organiseFile cant find the file, then there is nothing to print here (debugging statement)
-
+    
+    def checkName(self,name): #checks whether the name is appropriate
+        '''Checks if the name that is input is appropriate or not'''
+        inappropriate = False #initiates inappropriate as false
+        try:   
+            with open('media/Name check.txt', 'r') as file:
+                list = file.read() #reads the file
+            list = list.split('\t') #spilts the original file line into a list of three
+            name.strip() #strips the name of any symbols
+            for word in list: #checks each word in list
+                if word == name: 
+                    inappropriate = True
+                    break
+                    
+        except:
+            print("Name check file could not be found")
+        
+        return inappropriate #returns a boolean whether its appropriate or not
 
 
 #creates the objects for the highscore class
 todayHS = highscore('Todays Highscores')
 HS = highscore('Highscores')
-
 #HS.appendFile()
 HS.appendFile()
 HS.printHighscore()
 
-print('break')
+
 
 todayHS.printHighscore()
