@@ -6,9 +6,6 @@ import os
 
 
 
-
-
-
 class highscore():
     """Deals with the lists and files relating to highscore
 
@@ -52,14 +49,14 @@ class highscore():
     def checkdate(self):
         ''' checks the date to determine whether the file contains highscore from the current day '''
         try:
-            
+                
             with open('media/'+self.HST+'.txt', 'r') as file: #trys to open the file
                 list = file.read() #reads the file
                 list = list.split('\t') #spilts the original file line into a list of three
-                dateCheck = list[3] #gets the date to check ,do not need to check them all as they all are the same
+                dateCheck = list[2] #gets the date to check ,do not need to check them all as they all are the same
                 dateCheck = dateCheck[0:((len(list[2]))-1)]
-                    
-                if d.date.today == dateCheck:
+                print('checked the date')
+                if str(d.date.today()) == dateCheck:
                     today = True #creates an easy to use boolean
                 else:
                     today = False
@@ -68,30 +65,29 @@ class highscore():
         
         return today #returns to further use
     
-    def appendFile(self):
+    def appendFile(self,name,score):
         '''Appends data to both of the highscore files, as well as checking if the today highscores are the correct date'''
         
-        name  = input('What is your name') #temp test
         inappropriate = self.checkName(name)
         while inappropriate == True:
             print('Inappropriate name')
-            name = input('What is your name') #temp test
-            inappropriate = self.checkName(name)
+            name = ''
+            return name
             
-        score = input('what is your score') #temp test
         date = str(d.date.today()) #creates todays date
 
         with open('media/'+self.HS+'.txt','a') as file: #Will create a new file if there is not one there, use append to not overwrite data
-            file.write(name+'\t'+score+'\t'+ date +'\n') #writes to the file
+            file.write(name+'\t'+str(score)+'\t'+ date +'\n') #writes to the file
         today = self.checkdate()
         
         if today == False: 
             os.remove('media/'+self.HST+'.txt') #removes the file if the dates are not current (whipes all highscores)
             with open('media/'+self.HST+'.txt','a') as file: #Will create a new file if there is not one there, use append to not overwrite data
-                file.write(name+'\t'+score+'\t'+ date +'\n') #writes to the file
+                file.write(name+'\t'+str(score)+'\t'+ date +'\n') #writes to the file
         else:
             with open('media/'+self.HST+'.txt','a') as file: #Will create a new file if there is not one there, use append to not overwrite data
-                file.write(name+'\t'+score+'\t'+ date +'\n') #writes to the file            
+                file.write(name+'\t'+str(score)+'\t'+ date +'\n') #writes to the file
+        return name
     
     def printHighscore(self): #prints the highscores
         '''Temporary method to print out the highscore'''
@@ -120,13 +116,5 @@ class highscore():
         return inappropriate #returns a boolean whether its appropriate or not
 
 
-#creates the objects for the highscore class
-todayHS = highscore('Todays Highscores')
-HS = highscore('Highscores')
-#HS.appendFile()
-HS.appendFile()
-HS.printHighscore()
 
 
-
-todayHS.printHighscore()
