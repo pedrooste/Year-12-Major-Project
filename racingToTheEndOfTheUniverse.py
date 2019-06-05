@@ -61,6 +61,9 @@ Ecar4 = Ecar(yellow,5,-440,50,50)
 Ecar5 = Ecar(lightRed,5,-510,50,50)
 Ecar6 = Ecar(red,5,-580,50,50)
 
+#creates two objects of Highscores which will be refered to acess methods ass well as printing scores
+HST = highscore('Todays Highscores')
+HS = highscore('Highscores')
 
 
 #creating a dictionary that referes to each of the enemy car objects, this is to make it easier to call them later
@@ -98,7 +101,8 @@ class game():
         self.carX = 375 
         self.playScreen = "intro" 
         self.score = 0 
-        self.name = '' 
+        self.name = ''
+        self.saved = False
         
 
         
@@ -173,44 +177,58 @@ class game():
         screen.fill(white) #fills the screen with a background colour
         rTxt(screen,"Highscores",400,50,48,black)
         self.playScreen = introB.draw(screen,600,50, self.playScreen) #draws the back button for the intro screen
+        self.scoreScreen = 
         
     def crashScreen(self):
         """Displays the crash screen when a boundry is met
         this will reference to other classes and modules to display a screen
         """
-        save = False #states whether the name is saved or not
-            
+        save = False #states whether the name is saved or not  
         
         P.draw.rect(screen,white,(100,50,600,500)) #draws background screen
-        rTxt(screen,"Name: ",200,275,48,black) #displays text
-        P.draw.rect(screen,black,(300,250,300,50),5) #border for name input
+        
+        
         rTxt(screen,"You crashed!",400,100,48,black) #displays text saying you crashed
         rTxt(screen,("Score: "+str(self.score)),400,200,48,black) #displays your score
         
-        for event in P.event.get(): #gets any events from the user
-            if event.type == P.KEYDOWN: #checks if the event is a key press
-                if event.key == P.K_BACKSPACE: #If the event is a backspace it will take away a character from the string
-                    self.name = self.name[0:-1]
-                elif event.key == P.K_TAB:
-                    pass #cant put a tab within the name as this is what seperates variables
-                else:
-                    if len(self.name) < 10: #limit of characters is 10
-                        self.name += event.unicode #adds the letter or symbol to the name
-                    
+        if self.saved == False:
+            rTxt(screen,"Name: ",200,275,48,black) #displays text
+            P.draw.rect(screen,black,(300,250,300,50),5) #border for name input
+            save = saveB.draw(screen,450,450,self.playScreen) #draws the save button
+            
+            
+            for event in P.event.get(): #gets any events from the user
+                if event.type == P.KEYDOWN: #checks if the event is a key press
+                    if event.key == P.K_BACKSPACE: #If the event is a backspace it will take away a character from the string
+                        self.name = self.name[0:-1]
+                    elif event.key == P.K_TAB:
+                        pass #cant put a tab within the name as this is what seperates variables
+                    else:
+                        if len(self.name) < 10: #limit of characters is 10
+                            self.name += event.unicode #adds the letter or symbol to the name
+                        
 
-        rTxt(screen,self.name,400,275,48,black) #draws the name
+            rTxt(screen,self.name,400,275,48,black) #draws the name
         
         self.playScreen = mainMenuB.draw(screen,150,450,self.playScreen) #draws a main menu button
         if self.playScreen == "intro": #if the palyer wants to go to the main menu, positions must be reset
             self.carX = 375 #car reset positon
             self.score = 0 # resets the score
+            self.name = '' #resets the name
+            self.saved = False #resets the saved variable
             for i in range (0,6): #becasue difficulty is not passed we will reset all of the cars, this is okay because it is done rarely 
                 enemyCarDict[i].resetCars() #calls class method to reset the value of the coordinates for each object
                 
-        save = saveB.draw(screen,450,450,self.playScreen) #draws the save button
+        
         
         if save == True:
-            print('Save has been run as a stub') #this will later refer to highscores
+            self.name = HS.appendFile(self.name,self.score)
+            if self.name == '':
+                self.saved = False
+            else:
+                self.saved = True
+                print("score was saved")
+            
             
     def gameloop(self):
         ''' determines what screen to display based on playscreen'''
@@ -225,11 +243,12 @@ game = game()
 # game loop - runs loopRate times a second!
 while play:  # game loop - note:  everything in this loop is indented one tab
     
+    game.gameloop()
     
     for event in P.event.get():  # get user interaction events
         if event.type == P.QUIT:  # tests if window's X (close) has been clicked
             play = False  # causes exit of game loop
-    game.gameloop()
+
 
         
     # your code ends here #
