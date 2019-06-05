@@ -44,6 +44,8 @@ instructionsB = button(blue,lightBlue,200,50,"INSTRUCTIONS",34,black,"instructio
 introB = button(red,lightRed,150,50,"BACK",34,black,"intro")
 mainMenuB = button(red,lightRed,200,50,"MAIN MENU",34,black,'mainMenu')
 saveB = button(blue,lightBlue,200,50,"SAVE",34,black,'save')
+todayB = button(blue,lightBlue,150,50,"TODAYS",34,black,'today')
+overallB = button(blue,lightBlue,150,50,"OVERALL",34,black,'overall')
 
 #creates objects to be used later on in arrowButton class
 leftB = arrowButton(yellow,lightYellow,100,50,"left")
@@ -103,6 +105,7 @@ class game():
         self.score = 0 
         self.name = ''
         self.saved = False
+        self.today = False
         
 
         
@@ -175,9 +178,23 @@ class game():
         this will then reference to other classes
         """
         screen.fill(white) #fills the screen with a background colour
-        rTxt(screen,"Highscores",400,50,48,black)
         self.playScreen = introB.draw(screen,600,50, self.playScreen) #draws the back button for the intro screen
-        self.scoreScreen = 
+
+            
+        if self.today == True:
+            press = todayB.draw(screen,600,500, self.playScreen)
+            rTxt(screen,"Overall Highscores",400,50,48,black)
+            HS.printHighscore(screen,black)
+            
+        if self.today == False:
+            press = overallB.draw(screen,600,500, self.playScreen)
+            rTxt(screen,"Todays Highscores",400,50,48,black)
+            HST.printHighscore(screen,black)
+
+        if press == True:
+            self.today = False
+        if press == False:
+            self.today = True
         
     def crashScreen(self):
         """Displays the crash screen when a boundry is met
