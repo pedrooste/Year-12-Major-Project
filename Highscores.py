@@ -2,6 +2,7 @@ import pygame as P # accesses pygame files
 import sys  # to communicate with windows
 import datetime as d
 import os
+from mods import *
 
 
 
@@ -38,7 +39,7 @@ class highscore():
                     list3 = (list3[0:((len(list[2]))-1)])
                     list = [list1,list2,list3]
                     highscoreList.append(list) #creates a list of highscores
-                    
+                        
             highscoreList.sort(key= lambda x: x[1], reverse = True) #sorts the list, reverse order as it naturally sorts low to high
 
             self.list = highscoreList #this then creates a list
@@ -55,14 +56,13 @@ class highscore():
                 list = list.split('\t') #spilts the original file line into a list of three
                 dateCheck = list[2] #gets the date to check ,do not need to check them all as they all are the same
                 dateCheck = dateCheck[0:((len(list[2]))-1)]
-                print('checked the date')
                 if str(d.date.today()) == dateCheck:
                     today = True #creates an easy to use boolean
                 else:
                     today = False
         except:
             today = True
-        
+        print(today)
         return today #returns to further use
     
     def appendFile(self,name,score):
@@ -80,7 +80,8 @@ class highscore():
             file.write(name+'\t'+str(score)+'\t'+ date +'\n') #writes to the file
         today = self.checkdate()
         
-        if today == False: 
+        if today == False:
+            print('today equalled false')
             os.remove('media/'+self.HST+'.txt') #removes the file if the dates are not current (whipes all highscores)
             with open('media/'+self.HST+'.txt','a') as file: #Will create a new file if there is not one there, use append to not overwrite data
                 file.write(name+'\t'+str(score)+'\t'+ date +'\n') #writes to the file
@@ -89,13 +90,26 @@ class highscore():
                 file.write(name+'\t'+str(score)+'\t'+ date +'\n') #writes to the file
         return name
     
-    def printHighscore(self): #prints the highscores
+    def printHighscore(self,screen,colour): #prints the highscores
         '''Temporary method to print out the highscore'''
         self.organiseFile() #calls to organise file before printing
+        y = 200
+        count = 1
         try:
-            print('congratulations',self.list[0][0],'you scored',self.list[0][1]) #prints highest score
+            y = 200
+            count = 1
+            for line in range(0,5):
+                rTxt(screen,(str(count)+'. '+self.list[line][0]+': '+str(self.list[line][1])),400,y,48,colour)
+                y += 50
+                count += 1
+
         except:
-            print('there is no data to print highscores') #if organiseFile cant find the file, then there is nothing to print here (debugging statement)
+            y = 200
+            count = 1
+            for line in range(0,(len(self.list))):
+                rTxt(screen,(str(count)+'. '+self.list[line][0]+': '+str(self.list[line][1])),400,y,48,colour)
+                y += 50
+                count += 1
     
     def checkName(self,name): #checks whether the name is appropriate
         '''Checks if the name that is input is appropriate or not'''
