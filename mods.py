@@ -63,9 +63,12 @@ class button():
                     playScreen = "intro"
                 elif self.action =="mainMenu":
                     playScreen = "intro"
-                elif self.action =="quit":
-                    P.quit()
-                    quit()
+                elif self.action =="highscore":
+                    playScreen = "highscore"
+                elif self.action == "save":
+                    save = True
+                    return save #returns save instead of playScreen
+                    
         else:
             P.draw.rect(screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if mouse isnt on it
         font = P.font.SysFont('comicsans', self.size) #now we draw the text onto the button (first we have to render)
@@ -73,6 +76,7 @@ class button():
         screen.blit(text, (x + (self.w/2 - text.get_width()/2), y + (self.h/2 - text.get_height()/2)))
         return playScreen
     
+
 class arrowButton():
     """This class will be used to draw buttons and check if they have been clicked.
 
@@ -183,13 +187,14 @@ class Ecar():
         self.w = w
         self.h = h
         self.y = y
+        self.initialY = y
         self.x = R.randrange(100,(700-w)) #minus width as the area of the car could exceed the boundry
 
     def draw(self,screen,score):
         """Draws the moving enemy car object"""
         P.draw.rect(screen,self.colour,(self.x,self.y,self.w,self.h)) #draws a rectangle with a colour
         if self.y > 800: #checks if the object is passed, to which it will reset to be shown again
-            self.reset()
+            self.resetloop()
             score = score + 1 #increments score each time a car is passed (or in this case reset)
             print("The score is " + str(score)) #debugging statement
         else:
@@ -206,8 +211,12 @@ class Ecar():
         return crash
     
     
-    def reset(self): #reset function to be called, resest x and y.
-        self.y = 0
+    def resetloop(self): #reset function to be called, resest x and y.
+        self.y = -100 #resets back to an original position
+        self.x = R.randrange(100,(700-self.w))
+        
+    def resetCars(self):
+        self.y = self.initialY
         self.x = R.randrange(100,(700-self.w))
 
 def checkScore(score):
@@ -237,7 +246,7 @@ def checkScore(score):
         difficulty = 4
     elif score >= 12 and score < 19:
         difficulty = 5
-    elif score > 19:
+    elif score >= 19:
         difficulty = 6
         
     return difficulty
