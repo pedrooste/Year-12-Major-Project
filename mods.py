@@ -50,24 +50,33 @@ class button():
     def draw(self,screen,x,y,playScreen):
         """method that draws a rectangle on the screen, also checking if the mouse is over the rectangle, if it is it will also check for a click."""
         mouse= P.mouse.get_pos() #gets X and Y of mouse position
-        click= P.mouse.get_pressed() #gets postion of mouse when clicked
+        
     
         if x+self.w>mouse[0]>x and y+self.h>mouse[1]>y: #asks if the mouse is in the region where the button is located.
             P.draw.rect(screen,self.hColour,(x,y,self.w,self.h)) #draws a rectangle with the highlighted colour if mouse is on it
-            if click[0]==1 and self.action!=None: #asks if the button has been clicked when it is within the reigion and if action is doing nothing
-                if self.action=="play": #determines which action to fufil
-                    playScreen = "play"
-                elif self.action =="instructions":
-                    playScreen = "instructions"
-                elif self.action =="intro":
-                    playScreen = "intro"
-                elif self.action =="mainMenu":
-                    playScreen = "intro"
-                elif self.action =="highscore":
-                    playScreen = "highscore"
-                elif self.action == "save":
-                    save = True
-                    return save #returns save instead of playScreen
+            
+            for event in P.event.get():
+                P.event.get() #gets postion of mouse when clicked
+                if event.type == P.MOUSEBUTTONUP and self.action!=None: #asks if the button has been clicked when it is within the reigion and if action is doing nothing
+                    if self.action=="play": #determines which action to fufil
+                        playScreen = "play"
+                    elif self.action =="instructions":
+                        playScreen = "instructions"
+                    elif self.action =="intro":
+                        playScreen = "intro"
+                    elif self.action =="mainMenu":
+                        playScreen = "intro"
+                    elif self.action =="highscore":
+                        playScreen = "highscore"
+                    elif self.action == "save":
+                        save = True
+                        return save #returns save instead of playScreen
+                    elif self.action == "today":
+                        press = True
+                        return press #returns whether this button was pressed or not
+                    elif self.action == "overall":
+                        press = False
+                        return press
                     
         else:
             P.draw.rect(screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if mouse isnt on it
