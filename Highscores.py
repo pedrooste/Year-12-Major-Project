@@ -19,12 +19,13 @@ class highscore():
         self.HS = 'Highscores' : directory of overall highscore file
     """
 
-    def __init__(self,fileName):
+    def __init__(self,screen,fileName):
         """Inits SampleClass with variables."""
         self.fileName = fileName
         self.list = None #this remains empty for now
         self.HST = 'Todays Highscores'
         self.HS = 'Highscores'
+        self.screen = screen
 
     def organiseFile(self):
         """Organises the file and creates a list, this is called when printing the highscores as they need to be sorted."""
@@ -52,10 +53,11 @@ class highscore():
         try:
                 
             with open('media/'+self.HST+'.txt', 'r') as file: #trys to open the file
-                list = file.read() #reads the file
+                list = file.readline() #reads the file
                 list = list.split('\t') #spilts the original file line into a list of three
                 dateCheck = list[2] #gets the date to check ,do not need to check them all as they all are the same
                 dateCheck = dateCheck[0:((len(list[2]))-1)]
+                print(str(d.date.today()))
                 if str(d.date.today()) == dateCheck:
                     today = True #creates an easy to use boolean
                 else:
@@ -90,7 +92,7 @@ class highscore():
                 file.write(name+'\t'+str(score)+'\t'+ date +'\n') #writes to the file
         return name
     
-    def printHighscore(self,screen,colour): #prints the highscores
+    def printHighscore(self,colour): #prints the highscores
         '''Temporary method to print out the highscore'''
         self.organiseFile() #calls to organise file before printing
         y = 200
@@ -99,7 +101,7 @@ class highscore():
             y = 200
             count = 1
             for line in range(0,5):
-                rTxt(screen,(str(count)+'. '+self.list[line][0]+': '+str(self.list[line][1])),400,y,48,colour)
+                rTxt(self.screen,(str(count)+'. '+self.list[line][0]+': '+str(self.list[line][1])),400,y,48,colour)
                 y += 50
                 count += 1
 
@@ -107,7 +109,7 @@ class highscore():
             y = 200
             count = 1
             for line in range(0,(len(self.list))):
-                rTxt(screen,(str(count)+'. '+self.list[line][0]+': '+str(self.list[line][1])),400,y,48,colour)
+                rTxt(self.screen,(str(count)+'. '+self.list[line][0]+': '+str(self.list[line][1])),400,y,48,colour)
                 y += 50
                 count += 1
     
