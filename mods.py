@@ -36,8 +36,9 @@ class button():
         self.size = size of text
         self.tColour = colour of text
         self.action = determines what the buttons action is when clicked
+        self.screen = screen that the objects will be displayed to
     """
-    def __init__ (self,colour,hColour,w,h,txt,size,tColour,action):
+    def __init__ (self,screen,colour,hColour,w,h,txt,size,tColour,action):
         self.colour = colour
         self.hColour = hColour
         self.w = w
@@ -46,14 +47,15 @@ class button():
         self.size = size
         self.tColour = tColour
         self.action = action
+        self.screen = screen
 
-    def draw(self,screen,x,y,playScreen):
+    def draw(self,x,y,playScreen):
         """method that draws a rectangle on the screen, also checking if the mouse is over the rectangle, if it is it will also check for a click."""
         mouse= P.mouse.get_pos() #gets X and Y of mouse position
         
     
         if x+self.w>mouse[0]>x and y+self.h>mouse[1]>y: #asks if the mouse is in the region where the button is located.
-            P.draw.rect(screen,self.hColour,(x,y,self.w,self.h)) #draws a rectangle with the highlighted colour if mouse is on it
+            P.draw.rect(self.screen,self.hColour,(x,y,self.w,self.h)) #draws a rectangle with the highlighted colour if mouse is on it
             
             for event in P.event.get():
                 P.event.get() #gets postion of mouse when clicked
@@ -79,10 +81,10 @@ class button():
                         return press
                     
         else:
-            P.draw.rect(screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if mouse isnt on it
+            P.draw.rect(self.screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if mouse isnt on it
         font = P.font.SysFont('comicsans', self.size) #now we draw the text onto the button (first we have to render)
         text = font.render(self.txt, 1,self.tColour)
-        screen.blit(text, (x + (self.w/2 - text.get_width()/2), y + (self.h/2 - text.get_height()/2)))
+        self.screen.blit(text, (x + (self.w/2 - text.get_width()/2), y + (self.h/2 - text.get_height()/2)))
         return playScreen
     
 
@@ -97,17 +99,19 @@ class arrowButton():
         self.w = width of rectangle
         self.h = height of rectangle
         self.action = determines what the buttons action is when clicked
+        self.screen = screen that the objects will be displayed to
     """
 
-    def __init__(self,colour,hColour,w,h,action):
+    def __init__(self,screen,colour,hColour,w,h,action):
         """Inits arrowButton with varaibles."""
         self.colour = colour
         self.hColour = hColour
         self.w = w
         self.h = h
         self.action = action
+        self.screen = screen
 
-    def draw(self,screen,x,y,carX):
+    def draw(self,x,y,carX):
         """method that draws a rectangle on the screen, also checking if the mouse is over the rectangle, if it is it will also check for a click.
         - If the button is clicked, the carX variable will be updated (left and right)
 """
@@ -115,7 +119,7 @@ class arrowButton():
         click= P.mouse.get_pressed() #gets postion of mouse when clicked
         
         if x+self.w>mouse[0]>x and y+self.h>mouse[1]>y: #asks if the mouse is in the region where the button is located.
-            P.draw.rect(screen,self.hColour,(x,y,self.w,self.h)) #draws a rectangle with the highlighted colour if mouse is on it
+            P.draw.rect(self.screen,self.hColour,(x,y,self.w,self.h)) #draws a rectangle with the highlighted colour if mouse is on it
             if click[0]==1 and self.action!=None: #asks if the button has been clicked when it is within the reigion and if action is doing nothing
                 if self.action =="right": #determines which action to fufil
                     carX +=5 #car x position is updated
@@ -123,7 +127,7 @@ class arrowButton():
                     carX -=5
 
         else:
-            P.draw.rect(screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if mouse isnt on it
+            P.draw.rect(self.screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if mouse isnt on it
            
         return carX
 
@@ -137,21 +141,23 @@ class player():
         self.hColour = colour of the rectangle when mouse is over it
         self.w = width of rectangle
         self.h = height of rectangle
+        self.screen = screen that the objects will be displayed to
     """
 
-    def __init__(self,colour,hColour,w,h):
+    def __init__(self,screen,colour,hColour,w,h):
         """Inits Player class with variables"""
         self.colour = colour
         self.hColour = hColour
         self.w = w
         self.h = h
+        self.screen = screen
 
-    def draw(self,screen,x,movement):
+    def draw(self,x,movement):
         """method that draws the player onto the screen"""
         if movement == True:
-            P.draw.rect(screen,self.hColour,(x,490,self.w,self.h)) #draws a rectangle with the highlighted colour if it has been moved
+            P.draw.rect(self.screen,self.hColour,(x,490,self.w,self.h)) #draws a rectangle with the highlighted colour if it has been moved
         else:
-            P.draw.rect(screen,self.colour,(x,490,self.w,self.h)) #draws a rectangle with the normal colour if not moved
+            P.draw.rect(self.screen,self.colour,(x,490,self.w,self.h)) #draws a rectangle with the normal colour if not moved
 
 def rTxt(screen,msg,x,y,size,colour):
     """Renders and blits text
@@ -187,9 +193,10 @@ class Ecar():
         self.h = height of rectangle'
         self.y = starting y postion of the car (this is started at -10 so that it does not instantly appear on start of the game)
         self.x = x postion of the car which will be random between the road boundry
+        self.screen = screen that the objects will be displayed to
     """
 
-    def __init__(self,colour,speed,y,w,h):
+    def __init__(self,screen,colour,speed,y,w,h):
         """Inits SampleClass with blah."""
         self.colour = colour
         self.speed = speed
@@ -198,10 +205,11 @@ class Ecar():
         self.y = y
         self.initialY = y
         self.x = R.randrange(100,(700-w)) #minus width as the area of the car could exceed the boundry
+        self.screen = screen
 
-    def draw(self,screen,score):
+    def draw(self,score):
         """Draws the moving enemy car object"""
-        P.draw.rect(screen,self.colour,(self.x,self.y,self.w,self.h)) #draws a rectangle with a colour
+        P.draw.rect(self.screen,self.colour,(self.x,self.y,self.w,self.h)) #draws a rectangle with a colour
         if self.y > 800: #checks if the object is passed, to which it will reset to be shown again
             self.resetloop()
             score = score + 1 #increments score each time a car is passed (or in this case reset)
