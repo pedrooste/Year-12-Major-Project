@@ -94,32 +94,32 @@ class arrowButton():
     This is very similar to the class button however is different as a image will be blit rather than a rectangle in the future
 
     Attributes:
-        self.colour = colour of the rectangle
-        self.hColour = colour of the rectangle when mouse is over it
-        self.w = width of rectangle
-        self.h = height of rectangle
+        self.bImage = image of the button
+        self.bImageH = highlighted image of the button
+        self.w = width of the image
+        self.h = height of the image
         self.action = determines what the buttons action is when clicked
         self.screen = screen that the objects will be displayed to
     """
 
-    def __init__(self,screen,colour,hColour,w,h,action):
+    def __init__(self,screen,image,imageH,action):
         """Inits arrowButton with varaibles."""
-        self.colour = colour
-        self.hColour = hColour
-        self.w = w
-        self.h = h
+        self.bImage = image
+        self.bImageH = imageH
+        self.w = P.Surface.get_width(self.bImage) #gets the width
+        self.h = P.Surface.get_height(self.bImage) #gets the height
         self.action = action
         self.screen = screen
 
     def draw(self,x,y,carX):
-        """method that draws a rectangle on the screen, also checking if the mouse is over the rectangle, if it is it will also check for a click.
+        """method that blits a button on the screen, also checking if the mouse is over the button, if it is it will also check for a click.
         - If the button is clicked, the carX variable will be updated (left and right)
 """
         mouse= P.mouse.get_pos() #gets X and Y of mouse position
         click= P.mouse.get_pressed() #gets postion of mouse when clicked
         
         if x+self.w>mouse[0]>x and y+self.h>mouse[1]>y: #asks if the mouse is in the region where the button is located.
-            P.draw.rect(self.screen,self.hColour,(x,y,self.w,self.h)) #draws a rectangle with the highlighted colour if mouse is on it
+            self.screen.blit(self.bImageH, (x,y)) #blits the image of the highlighted button
             if click[0]==1 and self.action!=None: #asks if the button has been clicked when it is within the reigion and if action is doing nothing
                 if self.action =="right": #determines which action to fufil
                     carX +=5 #car x position is updated
@@ -127,12 +127,11 @@ class arrowButton():
                     carX -=5
 
         else:
-            P.draw.rect(self.screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if mouse isnt on it
-           
+            self.screen.blit(self.bImage, (x,y)) #blits the image of the button           
         return carX
 
 class player():
-    """Creates a rectangle that is controlled by the player (x movements) via previous buttons
+    """blits a car image that is controlled by the player (x movements) via previous buttons
 
     This class will be updated accordingly as more graphics are implemented into the game
     
@@ -153,7 +152,7 @@ class player():
         self.carR = carImageR
 
     def draw(self,x,movement):
-        """method that draws the player onto the screen"""
+        """method that blits the player onto the screen"""
         if movement == 'left':
             self.screen.blit(self.carL, (x,self.y)) #blits the image of the car going left
         elif movement == 'right':
@@ -186,36 +185,40 @@ def rTxt(screen,msg,x,y,size,colour):
 class Ecar():
     """creates objects for the variety of enemy cars
 
-    each enemy car will have diffrent speeds and lenghts (to be implemented) ....
+    
 
-    Attributes:
-        self.colour = colour of the rectangle
-        self.hColour = colour of the rectangle when mouse is over it
-        self.w = width of rectangle
-        self.h = height of rectangle'
-        self.y = starting y postion of the car (this is started at -10 so that it does not instantly appear on start of the game)
-        self.x = x postion of the car which will be random between the road boundry
+    Attributes:        
         self.screen = screen that the objects will be displayed to
-        self.playerWidth = width of the player car
-        self.playerHeight heiht of the player car
+        self.speed = speed that the enemy car will travel
+        self.eImage = enemy car image
+        self.w = width of enemy car
+        self.h = height of enemy car
+        self.y = y postion of the car (this is updated)
+        self.initialY = initial y postion of the car (used when reseting postions after a crash)
+        self.x = x postion of the car which will be random between the road boundry
+        self.playerWidth = width of player car
+        self.playerHeight = height of player car
     """
 
-    def __init__(self,screen,colour,speed,y,w,h,playerWidth,playerHeight):
+    def __init__(self,screen,eImage,speed,y,playerWidth,playerHeight):
         """Inits SampleClass with blah."""
-        self.colour = colour
+        self.screen = screen
         self.speed = speed
-        self.w = w
-        self.h = h
+        self.screen = screen
+        self.eImage = eImage
+        self.w = P.Surface.get_width(self.eImage) #gets the width
+        self.h = P.Surface.get_height(self.eImage) #gets the height
         self.y = y
         self.initialY = y
-        self.x = R.randrange(100,(700-w)) #minus width as the area of the car could exceed the boundry
-        self.screen = screen
+        self.x = R.randrange(120,(680-self.w)) #minus width as the area of the car could exceed the boundry
         self.playerWidth = playerWidth
         self.playerHeight = playerHeight
 
     def draw(self,score):
-        """Draws the moving enemy car object"""
-        P.draw.rect(self.screen,self.colour,(self.x,self.y,self.w,self.h)) #draws a rectangle with a colour
+        """blits the moving enemy car object"""
+        #P.draw.rect(self.screen,self.colour,(self.x,self.y,self.w,self.h)) #draws a rectangle with a colour
+        self.screen.blit(self.eImage, (self.x,self.y)) #blits the image of the enemy car
+        
         if self.y > 800: #checks if the object is passed, to which it will reset to be shown again
             self.resetloop()
             score = score + 1 #increments score each time a car is passed (or in this case reset)
