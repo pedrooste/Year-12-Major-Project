@@ -52,7 +52,7 @@ leftB = arrowButton(screen,yellow,lightYellow,100,50,"left")
 rightB = arrowButton(screen,yellow,lightYellow,100,50,"right")
 
 #creates objects to be used later in player class
-mcar = player(screen,red,green,50,50) #main player car
+mcar = player(screen,red,green,blue,50,50) #main player car
 
 #creates the enemy cars to be used later on
 Ecar0 = Ecar(screen,white,5,-50,50,50)
@@ -86,6 +86,14 @@ dispatch = {
         'crash' : 'crashScreen',
         'highscore' : 'highscoreScreen',
             }
+#loads all graphics
+try:
+    road = P.image.load('media/Background Road.png')
+    mainBackground = P.image.load('media/Background Main.png')
+    highscoreBackground = P.image.load('media/Background Highscore.png')
+except:
+    print("images could not be found")
+
 
 class game():
     """Game loop! contians all of the different screens in different methods....
@@ -96,6 +104,7 @@ class game():
         self.playScreen = "intro" :intialises what screen to start on
         self.score = 0 :initialises score because theres no headstarts here
         self.name = '' :name of the persons highscore
+        self.roadY = 0 : Controlls where the road is at as it scrolls
         """
         
     def __init__(self):
@@ -106,6 +115,7 @@ class game():
         self.name = ''
         self.saved = False
         self.today = False
+        self.roadY = 0
         
 
         
@@ -114,9 +124,8 @@ class game():
         Made up of a background, buttons and text
 
         """
-        screen.fill(white) #fills the screen with a background colour
-        rTxt(screen,"Racing to the end of the universe",400,50,48,black)
-        #draws the play, quit and instruction button
+        screen.blit(mainBackground, (0,0)) #blits the image background
+        
         self.playScreen = playB.draw(50,500, self.playScreen) 
         self.playScreen =highscoreB.draw(550,500, self.playScreen)
         self.playScreen =instructionsB.draw(275,500, self.playScreen)
@@ -126,20 +135,25 @@ class game():
         this will then reference to other classes
 
         """
-        screen.fill(grey) #fills the screen with a background colour , has to be placed first
-        #while these lines are inconvient now, a class will be made to draw and update the background once graphics are introduced
-        P.draw.line(screen,white,[100,0],[100,600],5)
-        P.draw.line(screen,white,[700,0],[700,600],5)
+
+        #creates the scrolling background image
+        scrollY = self.roadY % road.get_rect().height #scrollY is the Y coordinate that the image will be displayed, this is the remiander of roadY when dividied by the image height
+        screen.blit(road, (-25,scrollY - road.get_rect().height)) #displays the image to the screen, x is -25 due to the original image size, x has to minus height otherwise there would be unused space
+        if scrollY < SCREENHEIGHT: #Creates a looping road with a second image while the first is reset to its original position (blitting an image with normal scrollY)
+            screen.blit(road, (-25,scrollY)) 
+        self.roadY += 3 #controls the speed at which it scrolls
         
         oldCarX = self.carX #creates a temporary variable which will be checked later on to see if the x postion has been changed
         #draws left and right buttons
         self.carX = leftB.draw(50,500,self.carX)
         self.carX = rightB.draw(650,500,self.carX)
         
-        if oldCarX == self.carX: #if the x postion has been changed then movement will be true. If movement is true then the rectangle will be draw a different colour
-            movement = False
+        if oldCarX > self.carX: #checks whether the car has been moved left or right
+            movement = 'left'
+        elif oldCarX < self.carX:
+            movement = 'right'
         else:
-            movement = True
+            movement = None
         
         difficulty = checkScore(self.score) #checks the difficulty in order to determine how many cars to deply
         
@@ -152,7 +166,7 @@ class game():
 
 
 
-        rTxt(screen,("Score: "+str(self.score)),100,50,48,black)    
+        rTxt(screen,("Score: "+str(self.score)),100,50,48,black)  #draws the score  
         self.playScreen = introB.draw(600,50,self.playScreen) #draws the back button which only will be used to go back to the intro screen
         
         for i in range (0,difficulty): #checks all the cars that are depolyed
@@ -177,19 +191,19 @@ class game():
         """Displays the highscore screen
         this will then reference to other classes
         """
-        screen.fill(white) #fills the screen with a background colour
+        screen.blit(highscoreBackground, (0,0)) #blits the image background
         self.playScreen = introB.draw(600,50, self.playScreen) #draws the back button for the intro screen
 
             
-        if self.today == True:
-            press = todayB.draw(600,500, self.playScreen)
-            rTxt(screen,"Overall Highscores",400,50,48,black)
-            HS.printHighscore(black)
+        if self.today == True: #checks which highscores to display
+            press = todayB.draw(600,500, self.playScreen) #draws buttons to switch between highscore screens
+            rTxt(screen,"Overall Highscores",400,50,48,white) #draws the title of the screen
+            HS.printHighscore(white) #refers to method to print text
             
         if self.today == False:
             press = overallB.draw(600,500, self.playScreen)
-            rTxt(screen,"Todays Highscores",400,50,48,black)
-            HST.printHighscore(black)
+            rTxt(screen,"Todays Highscores",400,50,48,white)
+            HST.printHighscore(white)
 
         if press == True:
             self.today = False
