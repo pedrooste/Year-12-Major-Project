@@ -137,30 +137,29 @@ class player():
     This class will be updated accordingly as more graphics are implemented into the game
     
     Attributes:
-        self.colour = colour of the rectangle
-        self.hColour = colour of the rectangle when mouse is over it
-        self.w = width of rectangle
-        self.h = height of rectangle
         self.screen = screen that the objects will be displayed to
+        self.y = y position the image will be displayed
+        self.carN = car image when not moving
+        self.carL = car image when moving left
+        self.carR = car image when moving right
     """
 
-    def __init__(self,screen,colour,lColour,rColour,w,h):
+    def __init__(self,screen,carImage,carImageL,carImageR):
         """Inits Player class with variables"""
-        self.colour = colour
-        self.lColour = lColour
-        self.rColour = rColour
-        self.w = w
-        self.h = h
         self.screen = screen
+        self.y = 470
+        self.carN = carImage
+        self.carL = carImageL
+        self.carR = carImageR
 
     def draw(self,x,movement):
         """method that draws the player onto the screen"""
         if movement == 'left':
-            P.draw.rect(self.screen,self.lColour,(x,490,self.w,self.h)) #draws a rectangle with the highlighted colour if it has been moved left
+            self.screen.blit(self.carL, (x,self.y)) #blits the image of the car going left
         elif movement == 'right':
-            P.draw.rect(self.screen,self.rColour,(x,490,self.w,self.h)) #draws a rectangle with the highlighted colour if it has been moved right
+            self.screen.blit(self.carR, (x,self.y)) #blits the image of the car going right
         else:
-            P.draw.rect(self.screen,self.colour,(x,490,self.w,self.h)) #draws a rectangle with the normal colour if not moved
+            self.screen.blit(self.carN, (x,self.y)) #blits the image of the car going straight
 
 def rTxt(screen,msg,x,y,size,colour):
     """Renders and blits text
@@ -197,9 +196,11 @@ class Ecar():
         self.y = starting y postion of the car (this is started at -10 so that it does not instantly appear on start of the game)
         self.x = x postion of the car which will be random between the road boundry
         self.screen = screen that the objects will be displayed to
+        self.playerWidth = width of the player car
+        self.playerHeight heiht of the player car
     """
 
-    def __init__(self,screen,colour,speed,y,w,h):
+    def __init__(self,screen,colour,speed,y,w,h,playerWidth,playerHeight):
         """Inits SampleClass with blah."""
         self.colour = colour
         self.speed = speed
@@ -209,6 +210,8 @@ class Ecar():
         self.initialY = y
         self.x = R.randrange(100,(700-w)) #minus width as the area of the car could exceed the boundry
         self.screen = screen
+        self.playerWidth = playerWidth
+        self.playerHeight = playerHeight
 
     def draw(self,score):
         """Draws the moving enemy car object"""
@@ -225,8 +228,8 @@ class Ecar():
     def checkHit(self,carX):
         """checks if the player car hits the enemy car"""
         crash = False #sets crash to false
-        if self.y + self.h > 490 and self.y < 490 +50: #sets crash to true if in the players car area
-            if self.x + self.w > carX and self.x < carX +50: #minus/plus width and height as this is the area (hitbox) of the rectangle
+        if self.y + self.h > 470 and self.y < 470 + self.playerHeight: #checks whether the Ecar is in the postion of the player
+            if self.x + self.w > carX and self.x < carX + self.playerWidth: #minus/plus width and height as this is the area (hitbox) of the rectangle
                 crash = True
         return crash
     
