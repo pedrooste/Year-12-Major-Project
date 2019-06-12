@@ -15,6 +15,22 @@ import random as R #import the random function
 from mods import * #imports modules from mods file
 from Highscores import * #imports the class from highscores file
 
+#loads all graphics, this has to be done early as they are used when passing to objects
+try:
+    road = P.image.load('media/Background Road.png')
+    mainBackground = P.image.load('media/Background Main.png')
+    highscoreBackground = P.image.load('media/Background Highscore.png')
+    carImage = P.image.load('media/red car.png')
+    carImageL = P.image.load('media/red car left.png')
+    carImageR = P.image.load('media/red car right.png')
+    
+    playerWidth = P.Surface.get_width(carImage) #gets the player width
+    playerHeight = P.Surface.get_height(carImage) #gets the player height
+except:
+    print("images could not be found")
+    
+
+
 # pygame setup - only runs once
 P.init()  # starts the game engine
 clock = P.time.Clock()  # creates clock to limit frames per second
@@ -52,16 +68,16 @@ leftB = arrowButton(screen,yellow,lightYellow,100,50,"left")
 rightB = arrowButton(screen,yellow,lightYellow,100,50,"right")
 
 #creates objects to be used later in player class
-mcar = player(screen,red,green,blue,50,50) #main player car
+mcar = player(screen,carImage,carImageL,carImageR) #main player car
 
 #creates the enemy cars to be used later on
-Ecar0 = Ecar(screen,white,5,-50,50,50)
-Ecar1 = Ecar(screen,black,5,-225,50,100)
-Ecar2 = Ecar(screen,lightBlue,5,-300,50,50)
-Ecar3 = Ecar(screen,blue,5,-370,50,50)
-Ecar4 = Ecar(screen,yellow,5,-440,50,50)
-Ecar5 = Ecar(screen,lightRed,5,-510,50,50)
-Ecar6 = Ecar(screen,red,5,-580,50,50)
+Ecar0 = Ecar(screen,white,5,-50,50,50,playerWidth,playerHeight)
+Ecar1 = Ecar(screen,black,5,-225,50,100,playerWidth,playerHeight)
+Ecar2 = Ecar(screen,lightBlue,5,-300,50,50,playerWidth,playerHeight)
+Ecar3 = Ecar(screen,blue,5,-370,50,50,playerWidth,playerHeight)
+Ecar4 = Ecar(screen,yellow,5,-440,50,50,playerWidth,playerHeight)
+Ecar5 = Ecar(screen,lightRed,5,-510,50,50,playerWidth,playerHeight)
+Ecar6 = Ecar(screen,red,5,-580,50,50,playerWidth,playerHeight)
 
 #creates two objects of Highscores which will be refered to acess methods ass well as printing scores
 HST = highscore(screen,'Todays Highscores')
@@ -86,13 +102,7 @@ dispatch = {
         'crash' : 'crashScreen',
         'highscore' : 'highscoreScreen',
             }
-#loads all graphics
-try:
-    road = P.image.load('media/Background Road.png')
-    mainBackground = P.image.load('media/Background Main.png')
-    highscoreBackground = P.image.load('media/Background Highscore.png')
-except:
-    print("images could not be found")
+
 
 
 class game():
@@ -103,7 +113,7 @@ class game():
         self.carX = 375 :x cordinate for car
         self.playScreen = "intro" :intialises what screen to start on
         self.score = 0 :initialises score because theres no headstarts here
-        self.name = '' :name of the persons highscore
+        self.name = '' :def __init__(self,screen,carImage,carImageL,carImageR):name of the persons highscore
         self.roadY = 0 : Controlls where the road is at as it scrolls
         """
         
@@ -174,8 +184,7 @@ class game():
                 if crash == True:
                     self.playScreen = "crash" #sends to crash screen
             
-        
-        if self.carX>600+50 or self.carX<100: #creates a boundry that the car must stay in, however these numbers will be changed when graphics are implemented (based off drawn lines)
+        if self.carX>550 + playerWidth or self.carX<100: #creates a boundry that the car must stay in, uses get width as this depends on the size of the grahpic of the car
             self.playScreen = "crash"
 
     def instructionScreen(self):
