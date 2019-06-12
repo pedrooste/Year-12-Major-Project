@@ -144,18 +144,21 @@ class player():
         self.screen = screen that the objects will be displayed to
     """
 
-    def __init__(self,screen,colour,hColour,w,h):
+    def __init__(self,screen,colour,lColour,rColour,w,h):
         """Inits Player class with variables"""
         self.colour = colour
-        self.hColour = hColour
+        self.lColour = lColour
+        self.rColour = rColour
         self.w = w
         self.h = h
         self.screen = screen
 
     def draw(self,x,movement):
         """method that draws the player onto the screen"""
-        if movement == True:
-            P.draw.rect(self.screen,self.hColour,(x,490,self.w,self.h)) #draws a rectangle with the highlighted colour if it has been moved
+        if movement == 'left':
+            P.draw.rect(self.screen,self.lColour,(x,490,self.w,self.h)) #draws a rectangle with the highlighted colour if it has been moved left
+        elif movement == 'right':
+            P.draw.rect(self.screen,self.rColour,(x,490,self.w,self.h)) #draws a rectangle with the highlighted colour if it has been moved right
         else:
             P.draw.rect(self.screen,self.colour,(x,490,self.w,self.h)) #draws a rectangle with the normal colour if not moved
 
