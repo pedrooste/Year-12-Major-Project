@@ -23,6 +23,17 @@ try:
     carImage = P.image.load('media/red car.png')
     carImageL = P.image.load('media/red car left.png')
     carImageR = P.image.load('media/red car right.png')
+    enemy0 = P.image.load('media/enemy 0.png')
+    enemy1 = P.image.load('media/enemy 1.png')
+    enemy2 = P.image.load('media/enemy 2.png')
+    enemy3 = P.image.load('media/enemy 3.png')
+    enemy4 = P.image.load('media/enemy 4.png')
+    enemy5 = P.image.load('media/enemy 5.png')
+    enemy6 = P.image.load('media/enemy 6.png')
+    lImage = P.image.load('media/left.png')
+    lImageH = P.image.load('media/left highlight.png')
+    rImage = P.image.load('media/right.png')
+    rImageH = P.image.load('media/right highlight.png')
     
     playerWidth = P.Surface.get_width(carImage) #gets the player width
     playerHeight = P.Surface.get_height(carImage) #gets the player height
@@ -64,20 +75,20 @@ todayB = button(screen,blue,lightBlue,150,50,"TODAYS",34,black,'today')
 overallB = button(screen,blue,lightBlue,150,50,"OVERALL",34,black,'overall')
 
 #creates objects to be used later on in arrowButton class
-leftB = arrowButton(screen,yellow,lightYellow,100,50,"left")
-rightB = arrowButton(screen,yellow,lightYellow,100,50,"right")
+leftB = arrowButton(screen,lImage,lImageH,"left")
+rightB = arrowButton(screen,rImage,rImageH,"right")
 
 #creates objects to be used later in player class
 mcar = player(screen,carImage,carImageL,carImageR) #main player car
 
 #creates the enemy cars to be used later on
-Ecar0 = Ecar(screen,white,5,-50,50,50,playerWidth,playerHeight)
-Ecar1 = Ecar(screen,black,5,-225,50,100,playerWidth,playerHeight)
-Ecar2 = Ecar(screen,lightBlue,5,-300,50,50,playerWidth,playerHeight)
-Ecar3 = Ecar(screen,blue,5,-370,50,50,playerWidth,playerHeight)
-Ecar4 = Ecar(screen,yellow,5,-440,50,50,playerWidth,playerHeight)
-Ecar5 = Ecar(screen,lightRed,5,-510,50,50,playerWidth,playerHeight)
-Ecar6 = Ecar(screen,red,5,-580,50,50,playerWidth,playerHeight)
+Ecar0 = Ecar(screen,enemy0,5,-150,playerWidth,playerHeight)
+Ecar1 = Ecar(screen,enemy1,5,-300,playerWidth,playerHeight)
+Ecar2 = Ecar(screen,enemy2,5,-450,playerWidth,playerHeight)
+Ecar3 = Ecar(screen,enemy3,5,-600,playerWidth,playerHeight)
+Ecar4 = Ecar(screen,enemy4,5,-750,playerWidth,playerHeight)
+Ecar5 = Ecar(screen,enemy5,5,-900,playerWidth,playerHeight)
+Ecar6 = Ecar(screen,enemy6,5,-1050,playerWidth,playerHeight)
 
 #creates two objects of Highscores which will be refered to acess methods ass well as printing scores
 HST = highscore(screen,'Todays Highscores')
@@ -155,8 +166,8 @@ class game():
         
         oldCarX = self.carX #creates a temporary variable which will be checked later on to see if the x postion has been changed
         #draws left and right buttons
-        self.carX = leftB.draw(50,500,self.carX)
-        self.carX = rightB.draw(650,500,self.carX)
+        self.carX = leftB.draw(25,500,self.carX)
+        self.carX = rightB.draw(700,500,self.carX)
         
         if oldCarX > self.carX: #checks whether the car has been moved left or right
             movement = 'left'
