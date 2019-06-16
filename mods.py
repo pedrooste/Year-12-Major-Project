@@ -25,24 +25,24 @@ class button():
     """Creates a button with text
 
     Each object will be created with a number of vairables, these are then rendered out if the draw method is called.
-    draw method will draw a lighter rectangle if the mouse is in the same position, also checking if clicked.
+    draw method will blit a lighter image if the mouse is in the same position, also checking if clicked.
 
     Attributes:
-        self.colour = colour of the rectangle
-        self.hColour = colour of the rectangle when mouse is over it
-        self.w = width of rectangle
-        self.h = height of rectangle
+        self.bImage = button image
+        self.bImageH = highlighted button image
+        self.w = width of button image
+        self.h = height of button image
         self.txt = text to be displayed inside of rectangle
         self.size = size of text
         self.tColour = colour of text
         self.action = determines what the buttons action is when clicked
         self.screen = screen that the objects will be displayed to
     """
-    def __init__ (self,screen,colour,hColour,w,h,txt,size,tColour,action):
-        self.colour = colour
-        self.hColour = hColour
-        self.w = w
-        self.h = h
+    def __init__ (self,screen,button,hButton,txt,size,tColour,action):
+        self.bImage = button
+        self.bImageH = hButton
+        self.w = P.Surface.get_width(self.bImage) #gets the width
+        self.h = P.Surface.get_height(self.bImage) #gets the height
         self.txt = txt
         self.size = size
         self.tColour = tColour
@@ -50,12 +50,12 @@ class button():
         self.screen = screen
 
     def draw(self,x,y,playScreen):
-        """method that draws a rectangle on the screen, also checking if the mouse is over the rectangle, if it is it will also check for a click."""
+        """method that blits an image on the screen, also checking if the mouse is over the image, if it is it will also check for a click."""
         mouse= P.mouse.get_pos() #gets X and Y of mouse position
         
     
         if x+self.w>mouse[0]>x and y+self.h>mouse[1]>y: #asks if the mouse is in the region where the button is located.
-            P.draw.rect(self.screen,self.hColour,(x,y,self.w,self.h)) #draws a rectangle with the highlighted colour if mouse is on it
+            self.screen.blit(self.bImageH, (x,y)) #blits the image of the button           
             
             for event in P.event.get():
                 P.event.get() #gets postion of mouse when clicked
@@ -81,7 +81,7 @@ class button():
                         return press
                     
         else:
-            P.draw.rect(self.screen,self.colour,(x,y,self.w,self.h)) #draws a rectangle with the normal colour if mouse isnt on it
+            self.screen.blit(self.bImage, (x,y)) #blits the image of the button           
         font = P.font.SysFont('comicsans', self.size) #now we draw the text onto the button (first we have to render)
         text = font.render(self.txt, 1,self.tColour)
         self.screen.blit(text, (x + (self.w/2 - text.get_width()/2), y + (self.h/2 - text.get_height()/2)))
