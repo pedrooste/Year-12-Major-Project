@@ -20,9 +20,12 @@ try:
     road = P.image.load('media/Background Road.png')
     mainBackground = P.image.load('media/Background Main.png')
     highscoreBackground = P.image.load('media/Background Highscore.png')
+    crashBackground = P.image.load('media/Background crash.png')
+    
     carImage = P.image.load('media/red car.png')
     carImageL = P.image.load('media/red car left.png')
     carImageR = P.image.load('media/red car right.png')
+    
     enemy0 = P.image.load('media/enemy 0.png')
     enemy1 = P.image.load('media/enemy 1.png')
     enemy2 = P.image.load('media/enemy 2.png')
@@ -30,10 +33,21 @@ try:
     enemy4 = P.image.load('media/enemy 4.png')
     enemy5 = P.image.load('media/enemy 5.png')
     enemy6 = P.image.load('media/enemy 6.png')
+    
     lImage = P.image.load('media/left.png')
     lImageH = P.image.load('media/left highlight.png')
     rImage = P.image.load('media/right.png')
     rImageH = P.image.load('media/right highlight.png')
+    
+    gButton = P.image.load('media/green button.png')
+    rButton = P.image.load('media/red button.png')
+    sButton = P.image.load('media/stone button.png')
+    bButton = P.image.load('media/blue button.png')
+    
+    gButtonH = P.image.load('media/green button.png')
+    rButtonH = P.image.load('media/red button.png')
+    sButtonH = P.image.load('media/stone button.png')
+    bButtonH = P.image.load('media/blue button.png')
     
     playerWidth = P.Surface.get_width(carImage) #gets the player width
     playerHeight = P.Surface.get_height(carImage) #gets the player height
@@ -65,14 +79,14 @@ lightBlue = (8, 0, 255)
 grey = (92, 98, 112)
 
 #creates objects to be used later on in button class
-playB = button(screen,green,lightGreen,150,50,"PLAY",34,black,"play")
-highscoreB = button(screen,red,lightRed,200,50,"HIGHSCORES",34,black,"highscore")
-instructionsB = button(screen,blue,lightBlue,200,50,"INSTRUCTIONS",34,black,"instructions")
-introB = button(screen,red,lightRed,150,50,"BACK",34,black,"intro")
-mainMenuB = button(screen,red,lightRed,200,50,"MAIN MENU",34,black,'mainMenu')
-saveB = button(screen,blue,lightBlue,200,50,"SAVE",34,black,'save')
-todayB = button(screen,blue,lightBlue,150,50,"TODAYS",34,black,'today')
-overallB = button(screen,blue,lightBlue,150,50,"OVERALL",34,black,'overall')
+playB = button(screen,gButton,gButtonH,"PLAY",30,black,"play")
+highscoreB = button(screen,bButton,bButtonH,"HIGHSCORES",30,black,"highscore")
+instructionsB = button(screen,sButton,sButtonH,"INSTRUCTIONS",30,black,"instructions")
+introB = button(screen,rButton,rButtonH,"BACK",30,black,"intro")
+mainMenuB = button(screen,rButton,rButtonH,"MAIN MENU",30,black,'mainMenu')
+saveB = button(screen,sButton,sButtonH,"SAVE",30,black,'save')
+todayB = button(screen,sButton,sButtonH,"TODAYS",30,black,'today')
+overallB = button(screen,sButton,sButtonH,"OVERALL",30,black,'overall')
 
 #creates objects to be used later on in arrowButton class
 leftB = arrowButton(screen,lImage,lImageH,"left")
@@ -148,8 +162,8 @@ class game():
         screen.blit(mainBackground, (0,0)) #blits the image background
         
         self.playScreen = playB.draw(50,500, self.playScreen) 
-        self.playScreen =highscoreB.draw(550,500, self.playScreen)
-        self.playScreen =instructionsB.draw(275,500, self.playScreen)
+        self.playScreen =highscoreB.draw(575,500, self.playScreen)
+        self.playScreen =instructionsB.draw(325,500, self.playScreen)
         
     def playGame(self):
         """Displays the game screen
@@ -236,7 +250,8 @@ class game():
         """
         save = False #states whether the name is saved or not  
         
-        P.draw.rect(screen,white,(100,50,600,500)) #draws background screen
+        crashBackground
+        screen.blit(crashBackground, (100,50)) #blits the  crash image background
         
         
         rTxt(screen,"You crashed!",400,100,48,black) #displays text saying you crashed
