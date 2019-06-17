@@ -14,45 +14,45 @@ import sys  # to communicate with windows
 import random as R #import the random function
 from mods import * #imports modules from mods file
 from Highscores import * #imports the class from highscores file
+import time as T #imports time module
 
-#loads all graphics, this has to be done early as they are used when passing to objects
-try:
-    road = P.image.load('media/Background Road.png')
-    mainBackground = P.image.load('media/Background Main.png')
-    highscoreBackground = P.image.load('media/Background Highscore.png')
-    crashBackground = P.image.load('media/Background crash.png')
+#loads all graphics, this has to be done early as they are used when passing to objects 
+road = load('media/Background Road.png')
+mainBackground = load('media/Background Main.png')
+highscoreBackground = load('media/Background Highscore.png')
+squareBackground = load('media/Background crash.png')
+instructionsBackground = load('media/Background Instructions.png')
+
+carImage = load('media/red car.png')
+carImageL = load('media/red car left.png')
+carImageR = load('media/red car right.png')
+
+enemy0 = load('media/enemy 0.png')
+enemy1 = load('media/enemy 1.png')
+enemy2 = load('media/enemy 2.png')
+enemy3 = load('media/enemy 3.png')
+enemy4 = load('media/enemy 4.png')
+enemy5 = load('media/enemy 5.png')
+enemy6 = load('media/enemy 6.png')
+
+lImage = load('media/left.png')
+lImageH = load('media/left highlight.png')
+rImage = load('media/right.png')
+rImageH = load('media/right highlight.png')
+
+gButton = load('media/green button.png')
+rButton = load('media/red button.png')
+sButton = load('media/stone button.png')
+bButton = load('media/blue button.png')
+
+gButtonH = load('media/green button.png')
+rButtonH = load('media/red button.png')
+sButtonH = load('media/stone button.png')
+bButtonH = load('media/blue button.png')
+
+playerWidth = P.Surface.get_width(carImage) #gets the player width
+playerHeight = P.Surface.get_height(carImage) #gets the player height
     
-    carImage = P.image.load('media/red car.png')
-    carImageL = P.image.load('media/red car left.png')
-    carImageR = P.image.load('media/red car right.png')
-    
-    enemy0 = P.image.load('media/enemy 0.png')
-    enemy1 = P.image.load('media/enemy 1.png')
-    enemy2 = P.image.load('media/enemy 2.png')
-    enemy3 = P.image.load('media/enemy 3.png')
-    enemy4 = P.image.load('media/enemy 4.png')
-    enemy5 = P.image.load('media/enemy 5.png')
-    enemy6 = P.image.load('media/enemy 6.png')
-    
-    lImage = P.image.load('media/left.png')
-    lImageH = P.image.load('media/left highlight.png')
-    rImage = P.image.load('media/right.png')
-    rImageH = P.image.load('media/right highlight.png')
-    
-    gButton = P.image.load('media/green button.png')
-    rButton = P.image.load('media/red button.png')
-    sButton = P.image.load('media/stone button.png')
-    bButton = P.image.load('media/blue button.png')
-    
-    gButtonH = P.image.load('media/green button.png')
-    rButtonH = P.image.load('media/red button.png')
-    sButtonH = P.image.load('media/stone button.png')
-    bButtonH = P.image.load('media/blue button.png')
-    
-    playerWidth = P.Surface.get_width(carImage) #gets the player width
-    playerHeight = P.Surface.get_height(carImage) #gets the player height
-except:
-    print("images could not be found")
     
 
 
@@ -83,6 +83,7 @@ playB = button(screen,gButton,gButtonH,"PLAY",30,black,"play")
 highscoreB = button(screen,bButton,bButtonH,"HIGHSCORES",30,black,"highscore")
 instructionsB = button(screen,sButton,sButtonH,"INSTRUCTIONS",30,black,"instructions")
 introB = button(screen,rButton,rButtonH,"BACK",30,black,"intro")
+pauseB = button(screen,rButton,rButtonH,"PAUSE",30,black,"pause")
 mainMenuB = button(screen,rButton,rButtonH,"MAIN MENU",30,black,'mainMenu')
 saveB = button(screen,sButton,sButtonH,"SAVE",30,black,'save')
 todayB = button(screen,sButton,sButtonH,"TODAYS",30,black,'today')
@@ -126,6 +127,8 @@ dispatch = {
         'instructions' : 'instructionScreen',
         'crash' : 'crashScreen',
         'highscore' : 'highscoreScreen',
+        'pause' : 'pauseScreen',
+        
             }
 
 
@@ -151,6 +154,7 @@ class game():
         self.saved = False
         self.today = False
         self.roadY = 0
+        self.countdown = 3
         
 
         
@@ -170,6 +174,7 @@ class game():
         this will then reference to other classes
 
         """
+            
 
         #creates the scrolling background image
         scrollY = self.roadY % road.get_rect().height #scrollY is the Y coordinate that the image will be displayed, this is the remiander of roadY when dividied by the image height
@@ -202,7 +207,7 @@ class game():
 
 
         rTxt(screen,("Score: "+str(self.score)),100,50,48,black)  #draws the score  
-        self.playScreen = introB.draw(600,50,self.playScreen) #draws the back button which only will be used to go back to the intro screen
+        self.playScreen = pauseB.draw(600,50,self.playScreen) #draws the back button which only will be used to go back to the intro screen
         
         for i in range (0,difficulty): #checks all the cars that are depolyed
                 crash = enemyCarDict[i].checkHit(self.carX) #checks if the car hits the enemy car
@@ -211,14 +216,20 @@ class game():
             
         if self.carX>550 + playerWidth or self.carX<100: #creates a boundry that the car must stay in, uses get width as this depends on the size of the grahpic of the car
             self.playScreen = "crash"
+            
+        if self.countdown > 0: #checks to see if a coutndown is needed (after pause) however screen has to be updated
+            rTxt(screen,str(self.countdown),400,200,150,white) #displays coutndown number
+            self.countdown -= 1
+            P.display.flip()  # makes any changes visible on the screen
+            T.sleep(1) #sleeps for one second
 
     def instructionScreen(self):
         """Displays the instructions screen
         this will then reference to other classes
 
         """
-        screen.fill(black) #fills the screen with a background colour
-        rTxt(screen,"Instructions",400,50,48,white)
+        screen.blit(instructionsBackground,(0,0)) #blits the instructions image
+        rTxt(screen,"Instructions",400,50,48,white) #renders the instrucitons title
         self.playScreen = introB.draw(600,50, self.playScreen) #draws the back button for the intro screen
     
     def highscoreScreen(self):
@@ -250,8 +261,7 @@ class game():
         """
         save = False #states whether the name is saved or not  
         
-        crashBackground
-        screen.blit(crashBackground, (100,50)) #blits the  crash image background
+        screen.blit(squareBackground, (100,50)) #blits the  crash image background
         
         
         rTxt(screen,"You crashed!",400,100,48,black) #displays text saying you crashed
@@ -282,12 +292,7 @@ class game():
         
         
         if self.playScreen == "intro": #if the palyer wants to go to the main menu, positions must be reset
-            self.carX = 375 #car reset positon
-            self.score = 0 # resets the score
-            self.name = '' #resets the name
-            self.saved = False #resets the saved variable
-            for i in range (0,6): #becasue difficulty is not passed we will reset all of the cars, this is okay because it is done rarely 
-                enemyCarDict[i].resetCars() #calls class method to reset the value of the coordinates for each object
+            game.reset()
                 
         
         
@@ -300,6 +305,42 @@ class game():
                 print("score was saved")
             
             
+    def pauseScreen(self):
+        """Displays the pasue screen when requested
+        this will reference to other classes and modules to display a screen
+        """
+        
+        
+        screen.blit(squareBackground, (100,50)) #blits the image background
+        
+        
+        rTxt(screen,"Paused",400,100,48,black) #displays text saying you crashed
+        rTxt(screen,("Score: "+str(self.score)),400,200,48,black) #displays your score
+        self.playScreen = mainMenuB.draw(150,450,self.playScreen) #draws a main menu button
+        self.playScreen = playB.draw(450,450,self.playScreen)
+        
+        if self.playScreen == "play":
+            self.countdown = 3
+                
+        if self.playScreen == "intro": #if the palyer wants to go to the main menu, positions must be reset
+            game.reset()
+            
+            
+    def reset(self):
+        ''' resets all of the varaibles back to their originals'''
+        self.carX = 375 #car reset positon
+        self.score = 0 # resets the score
+        self.name = '' #resets the name
+        self.countdown = 3 #resets the countdown
+        self.saved = False #resets the saved variable
+        for i in range (0,6): #becasue difficulty is not passed we will reset all of the cars, this is okay because it is done rarely 
+            enemyCarDict[i].resetCars() #calls class method to reset the value of the coordinates for each object
+        
+        
+
+        
+
+
     def gameloop(self):
         ''' determines what screen to display based on playscreen'''
 
