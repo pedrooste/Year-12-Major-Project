@@ -47,6 +47,7 @@ class highscore():
         
         except:
             print('there is no file specified') #debugging statement
+            self.list = []
 
     def checkdate(self):
         ''' checks the date to determine whether the file contains highscore from the current day '''
