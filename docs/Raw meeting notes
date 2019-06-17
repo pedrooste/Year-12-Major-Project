@@ -1,0 +1,5 @@
+dated --/--/--
+-	The client, DR Goldrick owns a restaurant and is losing customers to the internet café that is nearby. To combat this, he would like to implement a touchscreen game that customers can play while they are waiting for their food.
+-	The game must include a high score board, where score will be uploaded and can be sorted different ways such as per day, year etc.
+-	The game must address a wide audience, keeping it easy to pick up and play while also remaining attractive to experienced players
+-	The client was thinking of a ‘space invaders’ type game, where the difficulty progresses as you continue.
