@@ -16,6 +16,15 @@ from mods import * #imports modules from mods file
 from Highscores import * #imports the class from highscores file
 import time as T #imports time module
 
+# pygame setup - only runs once
+P.init()  # starts the game engine
+clock = P.time.Clock()  # creates clock to limit frames per second
+loopRate = 60  # sets max speed of main loop
+SCREENSIZE = SCREENWIDTH, SCREENHEIGHT = 800, 600  # sets size of screen/window
+screen = P.display.set_mode(SCREENSIZE)  # creates window and game screen
+P.display.set_caption("Racing to the end of the universe!") #sets the game window caption
+play = True #controls the game loop
+
 #loads all graphics, this has to be done early as they are used when passing to objects 
 road = load('media/Background Road.png')
 mainBackground = load('media/Background Main.png')
@@ -53,17 +62,11 @@ bButtonH = load('media/blue button.png')
 playerWidth = P.Surface.get_width(carImage) #gets the player width
 playerHeight = P.Surface.get_height(carImage) #gets the player height
     
-    
-
-
-# pygame setup - only runs once
-P.init()  # starts the game engine
-clock = P.time.Clock()  # creates clock to limit frames per second
-loopRate = 60  # sets max speed of main loop
-SCREENSIZE = SCREENWIDTH, SCREENHEIGHT = 800, 600  # sets size of screen/window
-screen = P.display.set_mode(SCREENSIZE)  # creates window and game screen
-P.display.set_caption("Racing to the end of the universe!") #sets the game window caption
-play = True #controls the game loop
+try:
+    backgroundMuisc = P.mixer.music.load('media/background sfx.wav') #loads the sound files into a variable
+    crashMusic = P.mixer.Sound('media/crash sfx.wav')
+except FileNotFoundError as fnf_error:
+    print('error loading sfx')
 
 # set variables for some colours if you want them RGB (0-255)
 white = (255, 255, 255)
@@ -175,7 +178,6 @@ class game():
 
         """
             
-
         #creates the scrolling background image
         scrollY = self.roadY % road.get_rect().height #scrollY is the Y coordinate that the image will be displayed, this is the remiander of roadY when dividied by the image height
         screen.blit(road, (-25,scrollY - road.get_rect().height)) #displays the image to the screen, x is -25 due to the original image size, x has to minus height otherwise there would be unused space
@@ -212,16 +214,30 @@ class game():
         for i in range (0,difficulty): #checks all the cars that are depolyed
                 crash = enemyCarDict[i].checkHit(self.carX) #checks if the car hits the enemy car
                 if crash == True:
-                    self.playScreen = "crash" #sends to crash screen
+                    P.mixer.music.stop()
+                    P.mixer.Sound.play(crashMusic)
+                    self.playScreen = "crash"
+                    
             
         if self.carX>550 + playerWidth or self.carX<100: #creates a boundry that the car must stay in, uses get width as this depends on the size of the grahpic of the car
+            P.mixer.music.stop()
+            P.mixer.Sound.play(crashMusic)
             self.playScreen = "crash"
             
-        if self.countdown > 0: #checks to see if a coutndown is needed (after pause) however screen has to be updated
-            rTxt(screen,str(self.countdown),400,200,150,white) #displays coutndown number
-            self.countdown -= 1
-            P.display.flip()  # makes any changes visible on the screen
-            T.sleep(1) #sleeps for one second
+            
+        if self.countdown > 0: #sets a variable only if needed
+            x =325 #x cord to be display text
+            P.mixer.music.play()
+            while self.countdown > 0: #checks to see if a coutndown is needed (after pause) however screen has to be updated
+                rTxt(screen,str(self.countdown),x,200,150,white) #displays coutndown number
+                print(self.countdown) #debugging statement
+                self.countdown -= 1
+                x += 75
+                P.display.flip()  # makes any changes visible on the screen
+                T.sleep(1) #sleeps for one second
+                
+        if self.playScreen == "pause": #pauses the music if the game is paused
+            P.mixer.music.pause()
 
     def instructionScreen(self):
         """Displays the instructions screen
@@ -321,6 +337,7 @@ class game():
         
         if self.playScreen == "play":
             self.countdown = 3
+            P.mixer.music.unpause()    
                 
         if self.playScreen == "intro": #if the palyer wants to go to the main menu, positions must be reset
             game.reset()
@@ -355,7 +372,6 @@ game = game()
 while play:  # game loop - note:  everything in this loop is indented one tab
     
     game.gameloop()
-    
     for event in P.event.get():  # get user interaction events
         if event.type == P.QUIT:  # tests if window's X (close) has been clicked
             play = False  # causes exit of game loop
