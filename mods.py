@@ -70,6 +70,8 @@ class button():
                         playScreen = "intro"
                     elif self.action =="highscore":
                         playScreen = "highscore"
+                    elif self.action == "pause":
+                        playScreen = "pause"
                     elif self.action == "save":
                         save = True
                         return save #returns save instead of playScreen
@@ -181,6 +183,8 @@ def rTxt(screen,msg,x,y,size,colour):
     text = font.render(msg,True,colour) #creates a text for the blit function to use
     x,y = ((x- (text.get_rect().w/2)),(y- (text.get_rect().h/2))) #centres the text depening on the length and height of the text
     screen.blit(text,(x,y))
+    
+    
 
 class Ecar():
     """creates objects for the variety of enemy cars
@@ -276,6 +280,25 @@ def checkScore(score):
         difficulty = 6
         
     return difficulty
+    
+    
+    
+def load(name):
+    """loads media and returns a varaiable
+    This module will be used whenever you would like to render media, the benefit of puttin this in a function is that it can return a specific error code
+    Args:
+        name: path where the media is located
+    Returns:
+        tempV = varaible of the loaded media
+    Raises:
+        FileNotFoundError if file is not found
+    """
+    try:
+        tempV = P.image.load(name)
+    except FileNotFoundError as fnf_error:
+        print(fnf_error)
+        print('name')
+    return tempV
     
 
 
