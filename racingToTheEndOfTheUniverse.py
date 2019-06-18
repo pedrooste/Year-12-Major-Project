@@ -2,7 +2,7 @@
 A simple car game involving pygame. You control a car on a road in which you have to dodge oncomming cars, this will get harder as the game progresses.
 """
 
-__author__ = "Pedro Oste"
+__authorimport__ = "Pedro Oste"
 __license__ = "GPL"
 __version__ = "1.0.2"
 __email__ = "Pedro.oste@education.nsw.com.au"
@@ -54,10 +54,10 @@ rButton = load('media/red button.png')
 sButton = load('media/stone button.png')
 bButton = load('media/blue button.png')
 
-gButtonH = load('media/green button.png')
-rButtonH = load('media/red button.png')
-sButtonH = load('media/stone button.png')
-bButtonH = load('media/blue button.png')
+gButtonH = load('media/green button highlight.png')
+rButtonH = load('media/red button highlight.png')
+sButtonH = load('media/stone button highlight.png')
+bButtonH = load('media/blue button highlight.png')
 
 playerWidth = P.Surface.get_width(carImage) #gets the player width
 playerHeight = P.Surface.get_height(carImage) #gets the player height
@@ -65,8 +65,7 @@ playerHeight = P.Surface.get_height(carImage) #gets the player height
 try:
     backgroundMuisc = P.mixer.music.load('media/background sfx.wav') #loads the sound files into a variable
     crashMusic = P.mixer.Sound('media/crash sfx.wav')
-except FileNotFoundError as fnf_error:
-    print(fnf_error)
+except:
     print('error loading sfx')
     P.quit()   # stops the game engine
     sys.exit()  # close operating system window
@@ -85,6 +84,8 @@ lightGreen = (0, 249, 54)
 blue = (5, 0, 165)
 lightBlue = (8, 0, 255)
 grey = (92, 98, 112)
+
+
 
 #creates objects to be used later on in button class
 playB = button(screen,gButton,gButtonH,"PLAY",30,black,"play")
