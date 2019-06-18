@@ -99,8 +99,8 @@ todayB = button(screen,sButton,sButtonH,"TODAYS",30,black,'today')
 overallB = button(screen,sButton,sButtonH,"OVERALL",30,black,'overall')
 
 #creates objects to be used later on in arrowButton class
-leftB = arrowButton(screen,lImage,lImageH,"left")
-rightB = arrowButton(screen,rImage,rImageH,"right")
+leftB = button(screen,lImage,lImageH,None,None,None,"left")
+rightB = button(screen,rImage,rImageH,None,None,None,"right")
 
 #creates objects to be used later in player class
 mcar = player(screen,carImage,carImageL,carImageR) #main player car
@@ -174,9 +174,9 @@ class game():
         """
         screen.blit(mainBackground, (0,0)) #blits the image background
         
-        self.playScreen = playB.draw(50,500, self.playScreen) 
-        self.playScreen =highscoreB.draw(575,500, self.playScreen)
-        self.playScreen =instructionsB.draw(325,500, self.playScreen)
+        self.playScreen = playB.drawNav(50,500, self.playScreen) 
+        self.playScreen =highscoreB.drawNav(575,500, self.playScreen)
+        self.playScreen =instructionsB.drawNav(325,500, self.playScreen)
         
     def playGame(self):
         """Displays the game screen
@@ -193,8 +193,8 @@ class game():
         
         oldCarX = self.carX #creates a temporary variable which will be checked later on to see if the x postion has been changed
         #draws left and right buttons
-        self.carX = leftB.draw(25,500,self.carX)
-        self.carX = rightB.draw(700,500,self.carX)
+        self.carX = leftB.drawArrow(25,500,self.carX)
+        self.carX = rightB.drawArrow(700,500,self.carX)
         
         if oldCarX > self.carX: #checks whether the car has been moved left or right
             movement = 'left'
@@ -215,7 +215,7 @@ class game():
 
 
         rTxt(screen,("Score: "+str(self.score)),100,50,48,black)  #draws the score  
-        self.playScreen = pauseB.draw(600,50,self.playScreen) #draws the back button which only will be used to go back to the intro screen
+        self.playScreen = pauseB.drawNav(600,50,self.playScreen) #draws the back button which only will be used to go back to the intro screen
         
         for i in range (0,difficulty): #checks all the cars that are depolyed
                 crash = enemyCarDict[i].checkHit(self.carX) #checks if the car hits the enemy car
@@ -252,23 +252,23 @@ class game():
         """
         screen.blit(instructionsBackground,(0,0)) #blits the instructions image
         rTxt(screen,"Instructions",400,50,48,white) #renders the instrucitons title
-        self.playScreen = introB.draw(600,50, self.playScreen) #draws the back button for the intro screen
+        self.playScreen = introB.drawNav(600,50, self.playScreen) #draws the back button for the intro screen
     
     def highscoreScreen(self):
         """Displays the highscore screen
         this will then reference to other classes
         """
         screen.blit(highscoreBackground, (0,0)) #blits the image background
-        self.playScreen = introB.draw(600,50, self.playScreen) #draws the back button for the intro screen
+        self.playScreen = introB.drawNav(600,50, self.playScreen) #draws the back button for the intro screen
 
             
         if self.today == True: #checks which highscores to display
-            press = todayB.draw(600,500, self.playScreen) #draws buttons to switch between highscore screens
+            press = todayB.drawNav(600,500, self.playScreen) #draws buttons to switch between highscore screens
             rTxt(screen,"Overall Highscores",400,50,48,white) #draws the title of the screen
             HS.printHighscore(white) #refers to method to print text
             
         if self.today == False:
-            press = overallB.draw(600,500, self.playScreen)
+            press = overallB.drawNav(600,500, self.playScreen)
             rTxt(screen,"Todays Highscores",400,50,48,white)
             HST.printHighscore(white)
 
@@ -288,12 +288,12 @@ class game():
         
         rTxt(screen,"You crashed!",400,100,48,black) #displays text saying you crashed
         rTxt(screen,("Score: "+str(self.score)),400,200,48,black) #displays your score
-        self.playScreen = mainMenuB.draw(150,450,self.playScreen) #draws a main menu button
+        self.playScreen = mainMenuB.drawNav(150,450,self.playScreen) #draws a main menu button
         
         if self.saved == False:
             rTxt(screen,"Name: ",200,275,48,black) #displays text
             P.draw.rect(screen,black,(300,250,300,50),5) #border for name input
-            save = saveB.draw(450,450,self.playScreen) #draws the save button
+            save = saveB.drawNav(450,450,self.playScreen) #draws the save button
             
             
             for event in P.event.get(): #gets any events from the user
@@ -338,8 +338,8 @@ class game():
         
         rTxt(screen,"Paused",400,100,48,black) #displays text saying you crashed
         rTxt(screen,("Score: "+str(self.score)),400,200,48,black) #displays your score
-        self.playScreen = mainMenuB.draw(150,450,self.playScreen) #draws a main menu button
-        self.playScreen = playB.draw(450,450,self.playScreen)
+        self.playScreen = mainMenuB.drawNav(150,450,self.playScreen) #draws a main menu button
+        self.playScreen = playB.drawNav(450,450,self.playScreen)
         
         if self.playScreen == "play":
             self.countdown = 3
