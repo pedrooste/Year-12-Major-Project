@@ -66,7 +66,12 @@ try:
     backgroundMuisc = P.mixer.music.load('media/background sfx.wav') #loads the sound files into a variable
     crashMusic = P.mixer.Sound('media/crash sfx.wav')
 except FileNotFoundError as fnf_error:
+    print(fnf_error)
     print('error loading sfx')
+    P.quit()   # stops the game engine
+    sys.exit()  # close operating system window
+
+
 
 # set variables for some colours if you want them RGB (0-255)
 white = (255, 255, 255)
@@ -236,8 +241,8 @@ class game():
                 P.display.flip()  # makes any changes visible on the screen
                 T.sleep(1) #sleeps for one second
                 
-        if self.playScreen == "pause": #pauses the music if the game is paused
-            P.mixer.music.pause()
+        if self.playScreen == "pause": #stops the music if the game is paused
+            P.mixer.music.stop()
 
     def instructionScreen(self):
         """Displays the instructions screen
@@ -337,7 +342,7 @@ class game():
         
         if self.playScreen == "play":
             self.countdown = 3
-            P.mixer.music.unpause()    
+            
                 
         if self.playScreen == "intro": #if the palyer wants to go to the main menu, positions must be reset
             game.reset()
