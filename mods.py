@@ -20,6 +20,7 @@ __status__ = "Alpha"
 import pygame as P
 import random as R
 import time as T
+import sys  # to communicate with windows
 
 class button():
     """Creates a button with text
@@ -295,9 +296,8 @@ def load(name):
     """
     try:
         tempV = P.image.load(name)
-    except FileNotFoundError as fnf_error:
-        print(fnf_error)
-        print('name')
+    except :
+        print('error: '+name +' could not be found')
         P.quit()   # stops the game engine
         sys.exit()  # close operating system window
     return tempV
