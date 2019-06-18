@@ -298,6 +298,8 @@ def load(name):
     except FileNotFoundError as fnf_error:
         print(fnf_error)
         print('name')
+        P.quit()   # stops the game engine
+        sys.exit()  # close operating system window
     return tempV
     
 
