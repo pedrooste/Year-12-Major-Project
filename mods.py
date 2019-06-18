@@ -50,8 +50,8 @@ class button():
         self.action = action
         self.screen = screen
 
-    def draw(self,x,y,playScreen):
-        """method that blits an image on the screen, also checking if the mouse is over the image, if it is it will also check for a click."""
+    def drawNav(self,x,y,playScreen):
+        """method that blits an nav button image on the screen, also checking if the mouse is over the image, if it is it will also check for a click."""
         mouse= P.mouse.get_pos() #gets X and Y of mouse position
         
     
@@ -90,34 +90,9 @@ class button():
         self.screen.blit(text, (x + (self.w/2 - text.get_width()/2), y + (self.h/2 - text.get_height()/2)))
         return playScreen
     
-
-class arrowButton():
-    """This class will be used to draw buttons and check if they have been clicked.
-
-    This is very similar to the class button however is different as a image will be blit rather than a rectangle in the future
-
-    Attributes:
-        self.bImage = image of the button
-        self.bImageH = highlighted image of the button
-        self.w = width of the image
-        self.h = height of the image
-        self.action = determines what the buttons action is when clicked
-        self.screen = screen that the objects will be displayed to
-    """
-
-    def __init__(self,screen,image,imageH,action):
-        """Inits arrowButton with varaibles."""
-        self.bImage = image
-        self.bImageH = imageH
-        self.w = P.Surface.get_width(self.bImage) #gets the width
-        self.h = P.Surface.get_height(self.bImage) #gets the height
-        self.action = action
-        self.screen = screen
-
-    def draw(self,x,y,carX):
-        """method that blits a button on the screen, also checking if the mouse is over the button, if it is it will also check for a click.
-        - If the button is clicked, the carX variable will be updated (left and right)
-"""
+    def drawArrow(self,x,y,carX):
+        """method that blits a arrow button on the screen, also checking if the mouse is over the button, if it is it will also check for a click.
+            If the button is clicked, the carX variable will be updated (left and right) """
         mouse= P.mouse.get_pos() #gets X and Y of mouse position
         click= P.mouse.get_pressed() #gets postion of mouse when clicked
         
@@ -132,6 +107,8 @@ class arrowButton():
         else:
             self.screen.blit(self.bImage, (x,y)) #blits the image of the button           
         return carX
+
+
 
 class player():
     """blits a car image that is controlled by the player (x movements) via previous buttons
