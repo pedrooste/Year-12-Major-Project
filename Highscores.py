@@ -161,6 +161,8 @@ class highscore():
         '''Checks if the name that is input is appropriate or not'''
         #initiates inappropriate as false
         inappropriate = False
+        name = name.lower()
+        print(name)
         #trys to open and read name check file
         try:   
             with open('media/Name check.txt', 'r') as file:
@@ -168,7 +170,7 @@ class highscore():
             list = list.split('\t') #spilts the original file line into a list of three
             name.strip() #strips the name of any symbols
             for word in list: #checks each word in list
-                if word == name: 
+                if word in name: 
                     inappropriate = True
                     break
         #if file could not be found...            
