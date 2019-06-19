@@ -345,7 +345,11 @@ class game():
         #saves file if the save button once if has been pressed
         if save == True:
             self.name = HS.appendFile(self.name,self.score)
-            self.saved = True
+            #if the name is blank the score wont save (inappropriate names wont save)
+            if self.name == '':
+                self.saved = False
+            else:
+                self.saved = True
             
             
     def pauseScreen(self):
