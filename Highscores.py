@@ -170,7 +170,7 @@ class highscore():
             list = list.split('\t') #spilts the original file line into a list of three
             name.strip() #strips the name of any symbols
             for word in list: #checks each word in list
-                if word in name: 
+                if word == name: 
                     inappropriate = True
                     break
         #if file could not be found...            
